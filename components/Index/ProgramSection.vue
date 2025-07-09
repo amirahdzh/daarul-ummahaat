@@ -1,137 +1,294 @@
 <template>
-  <section class="py-16 bg-background">
+  <section class="py-16 bg-primary-dark">
     <div class="container mx-auto px-4">
-      <!-- Section Title -->
+      <!-- Title -->
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-accent mb-4">Our Programs</h2>
-        <div class="w-24 h-1 bg-highlight mx-auto mb-6"></div>
-        <p class="text-shadow max-w-2xl mx-auto">
-          Choose from our variety of Qur'anic education programs, tailored to
-          different needs, schedules, and learning objectives.
+        <h2 class="text-3xl font-bold text-white mb-4">Program Unggulan</h2>
+        <p class="text-white/80 max-w-2xl mx-auto">
+          Tiga pilar utama Yayasan dalam mendidik, membimbing, dan berbagi.
         </p>
+        <div class="w-24 h-1 bg-primary-light mx-auto mt-4"></div>
       </div>
 
-      <!-- Program Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div
-          v-for="(program, index) in programs"
-          :key="index"
-          class="hover:shadow-lg shadow-black/10 transition-shadow"
-        >
-          <div class="bg-white p-6 rounded-lg">
-            <!-- Card Header -->
-            <div>
-              <div :class="['w-16 h-1 mb-4', colorMap[program.color]]"></div>
-              <h3 class="text-xl font-bold text-shadow mb-1">
-                {{ program.title }}
-              </h3>
-              <p class="text-sm text-shadow/70">Level: {{ program.level }}</p>
-            </div>
-            <!-- Card Content -->
-            <div class="mt-4">
-              <p class="text-shadow mb-6">{{ program.description }}</p>
-              <ul class="space-y-2">
-                <li
-                  v-for="(feature, i) in program.features"
-                  :key="i"
-                  class="flex items-center"
-                >
-                  <span
-                    :class="[
-                      'w-2 h-2 rounded-full mr-2',
-                      colorMap[program.color],
-                    ]"
-                  ></span>
-                  <span class="text-sm text-shadow/90">{{ feature }}</span>
-                </li>
-              </ul>
-            </div>
-            <!-- Card Footer -->
-            <div class="mt-6">
-              <router-link to="/programs">
-                <button
-                  class="w-full border border-shadow/20 text-shadow hover:text-accent hover:bg-accent/10 transition py-2 rounded"
-                >
-                  Learn More
-                </button>
-              </router-link>
+      <!-- Carousel -->
+      <ClientOnly>
+        <div class="relative">
+          <Swiper
+            :modules="[Autoplay, Navigation, Pagination]"
+            :slides-per-view="1"
+            :loop="true"
+            :autoplay="{ delay: 5000, disableOnInteraction: false }"
+            :navigation="{
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            }"
+            :pagination="{ el: '.swiper-pagination', clickable: true }"
+            class="w-full"
+          >
+            <SwiperSlide
+              v-for="(program, index) in programs"
+              :key="index"
+              class="group"
+            >
+              <div class="relative overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-white to-gray-50 hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2">
+                <!-- Background Pattern -->
+                <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <!-- Program Number Badge -->
+                <div class="absolute top-4 left-4 z-10 bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg shadow-lg">
+                  {{ index + 1 }}
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 min-h-[400px]">
+                  <!-- Image Section (2/3 width) -->
+                  <div class="relative overflow-hidden md:col-span-2">
+                    <img
+                      :src="program.image"
+                      :alt="program.title"
+                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <!-- Image Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <!-- Website Link Overlay -->
+                    <div v-if="program.website" class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                      <a
+                        :href="program.website"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm text-primary px-3 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors duration-300"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                        Website
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <!-- Content Section (1/3 width) -->
+                  <div class="p-6 md:p-8 flex flex-col justify-center relative">
+                    <!-- Decorative Line -->
+                    <div class="absolute top-0 left-6 md:left-8 w-12 md:w-16 h-1 bg-gradient-to-r from-primary to-accent transform -translate-y-1/2"></div>
+                    
+                    <div class="mb-4">
+                      <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 leading-tight group-hover:text-primary transition-colors duration-300">
+                        {{ program.title }}
+                      </h3>
+                      <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4 md:mb-6">
+                        {{ program.description }}
+                      </p>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-2 md:gap-3">
+                      <router-link :to="program.link" class="group/btn">
+                        <button
+                          class="relative w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-accent text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group-hover/btn:bg-accent/90"
+                        >
+                          <span class="relative z-10 flex items-center justify-center gap-2 text-sm md:text-base">
+                            Selengkapnya
+                            <svg class="w-3 h-3 md:w-4 md:h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                          </span>
+                          <div class="absolute inset-0 bg-white/20 translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300"></div>
+                        </button>
+                      </router-link>
+                      
+                      <a
+                        v-if="program.website"
+                        :href="program.website"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="group/btn"
+                      >
+                        <button
+                          class="relative w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-white border-2 border-primary text-primary rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:bg-primary hover:text-white overflow-hidden"
+                        >
+                          <span class="relative z-10 flex items-center justify-center gap-2 text-sm md:text-base">
+                            <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                            Website
+                          </span>
+                        </button>
+                      </a>
+                    </div>
+                    
+                    <!-- Decorative Elements -->
+                    <div class="absolute bottom-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
+                      <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+          </Swiper>
+
+          <!-- Navigation buttons -->
+          <div
+            class="swiper-button-prev !w-12 !h-12 !bg-white/90 !backdrop-blur-sm !rounded-full !shadow-xl !text-primary hover:!bg-white !transition-all !duration-300 !border-2 !border-white/20 after:!text-lg after:!font-bold !left-4 !top-1/2 !transform !-translate-y-1/2"
+          ></div>
+          <div
+            class="swiper-button-next !w-12 !h-12 !bg-white/90 !backdrop-blur-sm !rounded-full !shadow-xl !text-primary hover:!bg-white !transition-all !duration-300 !border-2 !border-white/20 after:!text-lg after:!font-bold !right-4 !top-1/2 !transform !-translate-y-1/2"
+          ></div>
+
+          <!-- Pagination -->
+          <div class="swiper-pagination !bottom-6"></div>
+        </div>
+
+        <template #fallback>
+          <!-- Fallback content while Swiper is loading -->
+          <div class="w-full">
+            <div class="relative overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-white to-gray-50">
+              <!-- Program Number Badge -->
+              <div class="absolute top-4 left-4 z-10 bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg shadow-lg">
+                1
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-3 min-h-[400px]">
+                <div class="relative overflow-hidden md:col-span-2">
+                  <img
+                    :src="programs[0].image"
+                    :alt="programs[0].title"
+                    class="w-full h-full object-cover"
+                  />
+                  <div v-if="programs[0].website" class="absolute bottom-4 left-4">
+                    <a
+                      :href="programs[0].website"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm text-primary px-3 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors duration-300"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                      </svg>
+                      Website
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="p-6 md:p-8 flex flex-col justify-center relative">
+                  <div class="absolute top-0 left-6 md:left-8 w-12 md:w-16 h-1 bg-gradient-to-r from-primary to-accent transform -translate-y-1/2"></div>
+                  
+                  <div class="mb-4">
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 leading-tight">
+                      {{ programs[0].title }}
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed text-sm md:text-base mb-4 md:mb-6">
+                      {{ programs[0].description }}
+                    </p>
+                  </div>
+                  
+                  <div class="flex flex-col sm:flex-row gap-2 md:gap-3">
+                    <router-link :to="programs[0].link">
+                      <button
+                        class="relative w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-accent text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                      >
+                        <span class="relative z-10 flex items-center justify-center gap-2 text-sm md:text-base">
+                          Selengkapnya
+                          <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                          </svg>
+                        </span>
+                      </button>
+                    </router-link>
+                    
+                    <a
+                      v-if="programs[0].website"
+                      :href="programs[0].website"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button
+                        class="relative w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-white border-2 border-primary text-primary rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:bg-primary hover:text-white"
+                      >
+                        <span class="relative z-10 flex items-center justify-center gap-2 text-sm md:text-base">
+                          <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                          </svg>
+                          Website
+                        </span>
+                      </button>
+                    </a>
+                  </div>
+                  
+                  <div class="absolute bottom-4 right-4 opacity-10">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Register Button -->
-      <div class="text-center mt-12">
-        <router-link to="/register">
-          <button
-            class="bg-primary hover:bg-accent text-white px-6 py-3 rounded-md text-lg transition"
-          >
-            Register For Classes
-          </button>
-        </router-link>
-      </div>
+        </template>
+      </ClientOnly>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
 
-const colorMap = {
-  "nurul-red": "bg-primary",
-  "nurul-green": "bg-accent",
-  "nurul-yellow": "bg-highlight",
-};
+interface Program {
+  title: string;
+  description: string;
+  image: string;
+  link: string;
+  website?: string;
+}
 
-type ColorKey = keyof typeof colorMap;
-
-const programs = ref<
+const programs: Program[] = [
   {
-    title: string;
-    description: string;
-    features: string[];
-    level: string;
-    color: ColorKey;
-  }[]
->([
-  {
-    title: "Tahsin Al-Qur'an",
+    title: "Rumah Tahfizh Nurul Qur’an",
     description:
-      "Learn proper Qur'anic pronunciation and recitation with tajweed rules under expert guidance.",
-    features: [
-      "Letter pronunciation (makhārij)",
-      "Tajweed rules application",
-      "Rhythmic recitation practice",
-      "Small class sizes",
-    ],
-    level: "All Levels",
-    color: "nurul-red",
+      "Program tahsin dan tahfizh untuk semua usia, dengan target hafalan dan bimbingan rutin oleh ustadz/ustadzah berpengalaman.",
+    image: "/src/assets/home/hero-bg.jpg",
+    link: "/programs/tahfizh",
+    website: "https://tahfizh.daarulummahaat.org",
   },
   {
-    title: "Tahfizh Al-Qur'an",
+    title: "Bimbel Cordova",
     description:
-      "Structured Qur'an memorization program with personalized mentoring and regular progress tracking.",
-    features: [
-      "Memorization techniques",
-      "Revision methods",
-      "Progress certification",
-      "Regular evaluations",
-    ],
-    level: "Intermediate & Advanced",
-    color: "nurul-green",
+      "Bimbingan belajar akademik dan karakter untuk siswa SD–SMA, dengan pendekatan islami dan metode menyenangkan.",
+    image: "/src/assets/home/hero-bg.jpg",
+    link: "/programs/bimbel",
+    website: "https://cordova.daarulummahaat.org",
   },
   {
-    title: "Intensive Weekend Program",
+    title: "Kegiatan Sosial & Donasi",
     description:
-      "Condensed weekend classes for busy individuals looking to improve their Qur'anic literacy.",
-    features: [
-      "Weekend schedule",
-      "Combined tahsin & tahfizh",
-      "Practical application",
-      "Community support",
-    ],
-    level: "Mixed Levels",
-    color: "nurul-yellow",
+      "Program santunan yatim, bantuan dhuafa, dan penyaluran donasi dari masyarakat untuk yang membutuhkan.",
+    image: "/src/assets/home/hero-bg.jpg",
+    link: "/programs/sosial",
   },
-]);
+];
 </script>
+
+<style scoped>
+/* Custom Swiper Pagination Styling */
+:deep(.swiper-pagination-bullet) {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+:deep(.swiper-pagination-bullet-active) {
+  background: white;
+  transform: scale(1.2);
+  border-color: white;
+}
+
+/* Custom shadow for enhanced depth */
+:deep(.group:hover) {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+</style>

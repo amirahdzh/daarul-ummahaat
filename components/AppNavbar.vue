@@ -16,15 +16,17 @@ const toggleProgramDropdown = () => {
 
 <template>
   <header class="w-full fixed top-0 left-0 z-50 bg-background">
-    <div class="flex items-center justify-between max-w-7xl mx-auto px-6 py-4">
+    <div
+      class="flex items-center justify-between max-w-7xl mx-auto py-2 px-4 md:px-6 lg:px-8"
+    >
       <!-- Logo -->
       <RouterLink to="/" class="flex items-center gap-2">
         <img
-          src="/src/assets/logo-nq.png"
+          src="/src/assets/logo-du.png"
           alt="Logo Yayasan"
-          class="h-10 w-auto"
+          class="ml-2 h-16 w-auto"
         />
-        <span class="font-bold text-lg text-accent">RTT NQ</span>
+        <!-- <span class="font-bold text-lg text-accent">Daarul Ummahaat</span> -->
       </RouterLink>
 
       <!-- Desktop Navigation -->
@@ -83,7 +85,7 @@ const toggleProgramDropdown = () => {
         <RouterLink to="/kontak" class="hover:text-accent">Kontak</RouterLink>
         <RouterLink
           to="/daftar"
-          class="ml-4 bg-accent text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+          class="ml-4 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition"
         >
           Daftar
         </RouterLink>
@@ -170,7 +172,7 @@ const toggleProgramDropdown = () => {
         <RouterLink to="/kontak" class="hover:text-accent">Kontak</RouterLink>
         <RouterLink
           to="/daftar"
-          class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+          class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
         >
           Daftar
         </RouterLink>

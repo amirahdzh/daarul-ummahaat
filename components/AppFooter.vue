@@ -2,31 +2,35 @@
   <footer class="bg-shadow text-white pt-12 pb-6">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-        <!-- About Us -->
+        <!-- Tentang Kami -->
         <div>
           <h3 class="text-xl font-bold mb-4 border-b border-highlight pb-2">
-            About Us
+            Tentang Yayasan
           </h3>
-          <div class="flex items-center space-x-2 mb-4">
-            <RouterLink to="/" class="flex items-center gap-2">
-              <img
-                src="/src/assets/logo-nq.png"
-                alt="Logo Yayasan"
-                class="h-10 w-auto"
-              />
-              <span class="font-bold text-lg text-accent">RTT NQ</span>
-            </RouterLink>
+          <div class="mb-4">
+            <div class="flex items-start">
+              <RouterLink to="/" class="flex-shrink-0 mr-4 mb-2">
+                <img
+                  src="/src/assets/logo-du-white.png"
+                  alt="Logo Yayasan"
+                  class="h-16 w-16 object-contain rounded-lg"
+                />
+              </RouterLink>
+              <div class="overflow-hidden">
+                <p class="text-background/70 leading-relaxed text-justify">
+                  Yayasan Daarul Ummahaat adalah lembaga nirlaba yang bergerak
+                  dalam pendidikan Qur’an, bimbingan belajar, dan kegiatan
+                  sosial seperti santunan yatim dan dhuafa.
+                </p>
+              </div>
+            </div>
           </div>
-          <p class="text-background/70">
-            An Islamic educational center dedicated to teaching correct Qur'anic
-            recitation (tahsin) and memorization (tahfizh) with proper tajweed.
-          </p>
         </div>
 
-        <!-- Quick Links -->
+        <!-- Navigasi Cepat -->
         <div>
           <h3 class="text-xl font-bold mb-4 border-b border-highlight pb-2">
-            Quick Links
+            Navigasi
           </h3>
           <ul class="space-y-2">
             <li>
@@ -34,7 +38,7 @@
                 to="/"
                 class="text-background/70 hover:text-highlight"
               >
-                Home
+                Beranda
               </RouterLink>
             </li>
             <li>
@@ -42,7 +46,7 @@
                 to="/about"
                 class="text-background/70 hover:text-highlight"
               >
-                About Us
+                Tentang Kami
               </RouterLink>
             </li>
             <li>
@@ -50,7 +54,7 @@
                 to="/programs"
                 class="text-background/70 hover:text-highlight"
               >
-                Our Programs
+                Program Unggulan
               </RouterLink>
             </li>
             <li>
@@ -58,7 +62,7 @@
                 to="/gallery"
                 class="text-background/70 hover:text-highlight"
               >
-                Gallery
+                Galeri Kegiatan
               </RouterLink>
             </li>
             <li>
@@ -66,7 +70,7 @@
                 to="/blog"
                 class="text-background/70 hover:text-highlight"
               >
-                Blog
+                Berita & Artikel
               </RouterLink>
             </li>
             <li>
@@ -74,7 +78,7 @@
                 to="/contact"
                 class="text-background/70 hover:text-highlight"
               >
-                Contact Us
+                Hubungi Kami
               </RouterLink>
             </li>
             <li>
@@ -82,22 +86,22 @@
                 to="/register"
                 class="text-background/70 hover:text-highlight"
               >
-                Register Now
+                Pendaftaran
               </RouterLink>
             </li>
           </ul>
         </div>
 
-        <!-- Contact Us -->
+        <!-- Kontak -->
         <div>
           <h3 class="text-xl font-bold mb-4 border-b border-highlight pb-2">
-            Contact Us
+            Kontak
           </h3>
           <ul class="space-y-4 mb-4">
             <li class="flex items-start">
               <MapPinIcon class="text-highlight mr-2 shrink-0 mt-1 w-5 h-5" />
               <span class="text-background/70">
-                123 Islamic Center Street, Jakarta, Indonesia
+                Jl. Contoh No. 123, Sleman, Yogyakarta 55293
               </span>
             </li>
             <li class="flex items-center">
@@ -112,10 +116,10 @@
             <li class="flex items-center">
               <EnvelopeIcon class="text-highlight mr-2 shrink-0 w-5 h-5" />
               <a
-                href="mailto:info@nurulquran.id"
+                href="mailto:info@daarulummahaat.org"
                 class="text-background/70 hover:text-highlight"
               >
-                info@nurulquran.id
+                info@daarulummahaat.org
               </a>
             </li>
           </ul>
@@ -126,7 +130,7 @@
           >
             <iframe
               class="w-full h-full"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.3342680792037!2d112.732324!3d-7.210550!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7f8cb0d2cd30f%3A0xa0079b25b3a412bd!2sMasjid%20Contoh!5e0!3m2!1sen!2sid!4v1616210344403!5m2!1sen!2sid"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.3342680792037!2d112.732324!3d-7.210550!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7f8cb0d2cd30f%3A0xa0079b25b3a412bd!2sMasjid%20Contoh!5e0!3m2!1sid!2sid!4v1616210344403!5m2!1sid!2sid"
               style="border: 0"
               allowfullscreen=""
               loading="lazy"
@@ -141,7 +145,7 @@
         class="border-t border-background/20 pt-6 text-center text-background/60 text-sm"
       >
         <p>
-          &copy; {{ new Date().getFullYear() }} Rumah Tahfidz Nurul Qur'an. All
+          &copy; {{ new Date().getFullYear() }} Yayasan Daarul Ummahaat. All
           rights reserved.
         </p>
       </div>
@@ -152,7 +156,3 @@
 <script setup>
 import { MapPinIcon, PhoneIcon, EnvelopeIcon } from "@heroicons/vue/24/outline";
 </script>
-
-<style scoped>
-/* Kosongkan jika tidak butuh scoped CSS */
-</style>

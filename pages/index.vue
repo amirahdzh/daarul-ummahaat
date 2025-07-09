@@ -3,6 +3,7 @@
   <IndexAboutSection />
   <IndexProgramSection />
   <IndexActivitySection />
+  <IndexDonationSection />
   <!-- <IndexProfesionalSection /> -->
   <!-- <IndexTrackSection />
   <IndexSkillSection />

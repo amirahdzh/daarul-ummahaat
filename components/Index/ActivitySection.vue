@@ -3,11 +3,11 @@
     <div class="container mx-auto px-4">
       <!-- Section Title -->
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-accent mb-4">Latest Activities</h2>
+        <h2 class="text-3xl font-bold text-accent mb-4">Kegiatan Terbaru</h2>
         <div class="w-24 h-1 bg-highlight mx-auto mb-6"></div>
         <p class="text-shadow/70 max-w-2xl mx-auto">
-          Stay updated on our recent events, ceremonies, and special programs
-          that enrich our Qur'anic learning community.
+          Dokumentasi kegiatan terbaru dari Rumah Tahfizh, Bimbel Cordova, dan
+          aksi sosial yang dilakukan oleh Yayasan Daarul Ummahaat.
         </p>
       </div>
 
@@ -38,7 +38,7 @@
               to="/gallery"
               class="text-accent hover:text-hover-accent text-sm font-medium"
             >
-              See event photos →
+              Lihat dokumentasi →
             </RouterLink>
           </div>
         </div>
@@ -50,7 +50,7 @@
           <button
             class="bg-accent hover:bg-hover-accent text-white px-6 py-2 rounded-lg shadow transition-colors"
           >
-            View All Activities
+            Lihat Semua Kegiatan
           </button>
         </RouterLink>
       </div>
@@ -64,32 +64,25 @@ import { CalendarIcon } from "@heroicons/vue/24/outline";
 
 const activities = ref([
   {
-    title: "Annual Tahfizh Competition",
-    date: "April 15, 2025",
-    image:
-      "https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?auto=format&fit=crop&q=80",
+    title: "Kegiatan Santunan Yatim & Dhuafa",
+    date: "6 Mei 2025",
+    image: "/src/assets/home/hero-bg.jpg",
     description:
-      "Our annual competition where students showcase their Qur'an memorization skills before a panel of judges.",
+      "Yayasan menyalurkan bantuan tunai dan sembako kepada puluhan anak yatim dan keluarga dhuafa di lingkungan sekitar.",
   },
   {
-    title: "Ramadan Intensive Program",
-    date: "March 10-30, 2025",
-    image:
-      "https://images.unsplash.com/photo-1500673922987-e212871fec22?auto=format&fit=crop&q=80",
+    title: "Khataman dan Evaluasi Tahfizh",
+    date: "28 April 2025",
+    image: "/src/assets/home/hero-bg.jpg",
     description:
-      "Special intensive Qur'an study and memorization program during the blessed month of Ramadan.",
+      "Acara khataman Al-Qur’an santri serta evaluasi hafalan dengan dihadiri wali santri dan dewan asatidzah.",
   },
   {
-    title: "Community Iftar & Tarawih",
-    date: "Ramadan 1446H",
-    image:
-      "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&q=80",
+    title: "Kelas Intensif Ramadhan – Bimbel Cordova",
+    date: "1–25 Ramadhan 1446H",
+    image: "/src/assets/home/hero-bg.jpg",
     description:
-      "Join our community for iftar meals followed by special tarawih prayers led by our tahfizh students.",
+      "Kegiatan belajar tambahan selama Ramadhan untuk siswa SD–SMP yang ingin memperkuat pelajaran dan akhlak Islami.",
   },
 ]);
 </script>
-
-<style scoped>
-/* Kosongkan jika tidak perlu style tambahan */
-</style>
