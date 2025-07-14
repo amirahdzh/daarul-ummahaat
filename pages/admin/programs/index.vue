@@ -428,6 +428,7 @@ definePageMeta({
 });
 
 const { getAuthHeaders } = useAuth();
+const config = useRuntimeConfig();
 
 // State
 const searchQuery = ref("");
@@ -465,14 +466,12 @@ const queryParams = computed(() => {
 });
 
 // Fetch programs
-const { data, pending, error, refresh } = await useFetch(
-  "/api/admin/programs",
-  {
-    query: queryParams,
-    headers: getAuthHeaders(),
-    default: () => ({ data: [], meta: null }),
-  }
-);
+const { data, pending, error, refresh } = await useFetch("/admin/programs", {
+  baseURL: config.public.apiBase,
+  query: queryParams,
+  headers: getAuthHeaders(),
+  default: () => ({ data: [], meta: null }),
+});
 
 const programs = computed(() => data.value?.data || []);
 
@@ -526,13 +525,15 @@ const submitForm = async () => {
   formError.value = "";
 
   try {
+    // For create/update
     const url = showEditForm.value
-      ? `/api/admin/programs/${editingProgram.value.id}`
-      : "/api/admin/programs";
+      ? `/admin/programs/${editingProgram.value.id}`
+      : "/admin/programs";
 
     const method = showEditForm.value ? "PUT" : "POST";
 
     await $fetch(url, {
+      baseURL: config.public.apiBase,
       method,
       headers: getAuthHeaders(),
       body: form,
@@ -549,13 +550,11 @@ const submitForm = async () => {
 
 const toggleStatus = async (program: any) => {
   try {
-    await $fetch(`/api/admin/programs/${program.id}`, {
+    await $fetch(`/admin/programs/${program.id}`, {
+      baseURL: config.public.apiBase,
       method: "PUT",
       headers: getAuthHeaders(),
-      body: {
-        ...program,
-        is_published: !program.is_published,
-      },
+      body: { ...program, is_published: !program.is_published },
     });
 
     await refresh();
@@ -570,7 +569,9 @@ const deleteProgram = async (program: any) => {
   }
 
   try {
-    await $fetch(`/api/admin/programs/${program.id}`, {
+    // For delete
+    await $fetch(`/admin/programs/${program.id}`, {
+      baseURL: config.public.apiBase,
       method: "DELETE",
       headers: getAuthHeaders(),
     });
