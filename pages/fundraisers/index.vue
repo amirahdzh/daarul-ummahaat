@@ -241,12 +241,13 @@ const searchQuery = ref("");
 const statusFilter = ref("");
 const perPage = ref(10);
 const currentPage = ref(1);
+const config = useRuntimeConfig();
 
 // API call with reactive params
 const { data, pending, error, refresh } = await useFetch<ApiResponse>(
-  "/api/fundraisers",
+  "/fundraisers",
   {
-    baseURL: "http://localhost:8000",
+    baseURL: config.public.apiBase,
     query: computed(() => ({
       search: searchQuery.value,
       status: statusFilter.value,

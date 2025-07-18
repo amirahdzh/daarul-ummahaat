@@ -398,16 +398,16 @@ const queryParams = computed(() => {
 });
 
 // Fetch user donations
-const { data, pending, error, refresh } = await useFetch(
-  "/api/user/donations",
-  {
-    query: queryParams,
-    headers: {
-      Authorization: `Bearer ${user.value?.token}`,
-    },
-    default: () => ({ data: [], meta: null }),
-  }
-);
+const config = useRuntimeConfig();
+
+const { data, pending, error, refresh } = await useFetch("/user/donations", {
+  baseURL: config.public.apiBase,
+  query: queryParams,
+  headers: {
+    Authorization: `Bearer ${user.value?.token}`,
+  },
+  default: () => ({ data: [], meta: null }),
+});
 
 const donations = computed(() => data.value?.data || []);
 

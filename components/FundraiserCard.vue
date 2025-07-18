@@ -195,7 +195,8 @@ const getImageUrl = (imagePath: string): string => {
   if (imagePath.startsWith("http")) {
     return imagePath;
   }
-  return `http://localhost:8000/storage/${imagePath}`;
+  const config = useRuntimeConfig();
+  return `${config.public.apiBase.replace("/api", "")}/storage/${imagePath}`;
 };
 
 const onImageError = (event: Event) => {

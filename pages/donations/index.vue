@@ -448,18 +448,20 @@ const selectedFile = ref<File | null>(null);
 const fileInput = ref<HTMLInputElement>();
 
 // Fetch data
+const config = useRuntimeConfig();
+
 const { data: donationPackages } = await useFetch<{ data: DonationPackage[] }>(
-  "/api/donation-packages",
+  "/donation-packages",
   {
-    baseURL: "http://localhost:8000",
+    baseURL: config.public.apiBase,
     query: { per_page: 50 },
   }
 );
 
 const { data: fundraisers } = await useFetch<{ data: Fundraiser[] }>(
-  "/api/fundraisers",
+  "/fundraisers",
   {
-    baseURL: "http://localhost:8000",
+    baseURL: config.public.apiBase,
     query: { status: "active", per_page: 50 },
   }
 );
@@ -529,14 +531,11 @@ const submitDonation = async () => {
       formData.append("proof_image", selectedFile.value);
     }
 
-    const response = await $fetch<{ donation: { id: number } }>(
-      "/api/donations",
-      {
-        baseURL: "http://localhost:8000",
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await $fetch<{ donation: { id: number } }>("/donations", {
+      baseURL: config.public.apiBase,
+      method: "POST",
+      body: formData,
+    });
 
     // Redirect to success page
     await router.push(`/donations/success?id=${response.donation.id}`);

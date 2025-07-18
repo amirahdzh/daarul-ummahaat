@@ -260,12 +260,13 @@ const searchQuery = ref("");
 const categoryFilter = ref("");
 const perPage = ref(12);
 const currentPage = ref(1);
+const config = useRuntimeConfig();
 
 // API call with reactive params
 const { data, pending, error, refresh } = await useFetch<ApiResponse>(
-  "/api/donation-packages",
+  "/donation-packages",
   {
-    baseURL: "http://localhost:8000",
+    baseURL: config.public.apiBase,
     query: computed(() => ({
       search: searchQuery.value,
       category: categoryFilter.value,

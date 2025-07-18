@@ -38,6 +38,7 @@ export interface RegisterData {
 }
 
 export const useAuth = () => {
+  const config = useRuntimeConfig()
   const user = useState<User | null>('auth.user', () => null)
   const token = useState<string | null>('auth.token', () => null)
 
@@ -74,8 +75,8 @@ export const useAuth = () => {
   // Login method
   const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
     try {
-      const response = await $fetch<AuthResponse>('/api/login', {
-        baseURL: 'http://localhost:8000',
+      const response = await $fetch<AuthResponse>('/login', {
+        baseURL: config.public.apiBase,
         method: 'POST',
         body: credentials
       })
@@ -98,8 +99,8 @@ export const useAuth = () => {
   // Register method
   const register = async (userData: RegisterData): Promise<AuthResponse> => {
     try {
-      const response = await $fetch<AuthResponse>('/api/register', {
-        baseURL: 'http://localhost:8000',
+      const response = await $fetch<AuthResponse>('/register', {
+        baseURL: config.public.apiBase,
         method: 'POST',
         body: userData
       })
@@ -123,8 +124,8 @@ export const useAuth = () => {
   const logout = async (): Promise<void> => {
     try {
       if (token.value) {
-        await $fetch('/api/logout', {
-          baseURL: 'http://localhost:8000',
+        await $fetch('/logout', {
+          baseURL: config.public.apiBase,
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token.value}`
@@ -152,8 +153,8 @@ export const useAuth = () => {
     }
 
     try {
-      const response = await $fetch<User>('/api/user', {
-        baseURL: 'http://localhost:8000',
+      const response = await $fetch<User>('/user', {
+        baseURL: config.public.apiBase,
         headers: {
           'Authorization': `Bearer ${token.value}`
         }
@@ -224,8 +225,8 @@ export const useAuth = () => {
     }
 
     try {
-      const response = await $fetch<User>('/api/user/profile', {
-        baseURL: 'http://localhost:8000',
+      const response = await $fetch<User>('/user/profile', {
+        baseURL: config.public.apiBase,
         method: 'PUT',
         headers: getAuthHeaders(),
         body: profileData

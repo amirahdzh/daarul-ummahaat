@@ -292,19 +292,21 @@ const filter = ref("all");
 const apiEndpoint = computed(() => {
   switch (filter.value) {
     case "upcoming":
-      return "/api/activities/upcoming";
+      return "/activities/upcoming";
     case "past":
-      return "/api/activities/past";
+      return "/activities/past";
     default:
-      return "/api/activities";
+      return "/activities";
   }
 });
+
+const config = useRuntimeConfig();
 
 // API call with reactive params
 const { data, pending, error, refresh } = await useFetch<ApiResponse>(
   apiEndpoint,
   {
-    baseURL: "http://localhost:8000",
+    baseURL: config.public.apiBase,
     query: computed(() => {
       const params: any = {
         per_page: perPage.value,

@@ -307,11 +307,13 @@ if (!donationId) {
   });
 }
 
+const config = useRuntimeConfig();
+
 // Fetch donation data
 const { data, pending, error } = await useFetch<Donation>(
-  `/api/donations/${donationId}`,
+  `/donations/${donationId}`,
   {
-    baseURL: "http://localhost:8000",
+    baseURL: config.public.apiBase,
   }
 );
 

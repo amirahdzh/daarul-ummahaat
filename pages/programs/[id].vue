@@ -272,18 +272,20 @@ definePageMeta({
 });
 
 // Fetch program data
+const config = useRuntimeConfig();
+
 const { data, pending, error, refresh } = await useFetch<Program>(
-  `/api/programs/${programId}`,
+  `/programs/${programId}`,
   {
-    baseURL: "http://localhost:8000",
+    baseURL: config.public.apiBase,
   }
 );
 
 // Fetch related programs
 const { data: relatedPrograms, pending: relatedPending } = await useFetch<{
   data: Program[];
-}>("/api/programs", {
-  baseURL: "http://localhost:8000",
+}>("/programs", {
+  baseURL: config.public.apiBase,
   query: { per_page: 4 },
 });
 
@@ -292,7 +294,7 @@ const getImageUrl = (imagePath: string): string => {
   if (imagePath.startsWith("http")) {
     return imagePath;
   }
-  return `http://localhost:8000/storage/${imagePath}`;
+  return `${config.public.apiBase.replace("/api", "")}/storage/${imagePath}`;
 };
 
 const onImageError = (event: Event) => {
