@@ -19,7 +19,7 @@
               :modules="[Autoplay, Navigation, Pagination]"
               :slides-per-view="1"
               :loop="programs.length > 1"
-              :autoplay="{ delay: 5000, disableOnInteraction: false }"
+              :autoplay="{ delay: 6000, disableOnInteraction: false }"
               :navigation="{
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -33,17 +33,17 @@
                 class="group"
               >
                 <div
-                  class="relative overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-white to-gray-50 hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 max-w-xl mx-auto"
+                  class="relative overflow-hidden rounded-2xl shadow-lg bg-gradient-to-br from-white to-gray-50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 max-w-xl mx-auto"
                   style="min-height: 400px"
                 >
                   <!-- Background Pattern -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    class="absolute inset-0 bg-gradient-to-br from-primary/3 to-accent/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   ></div>
 
                   <!-- Program Number Badge -->
                   <div
-                    class="absolute top-4 left-4 z-10 bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg shadow-lg"
+                    class="absolute top-4 left-4 z-10 bg-primary text-white rounded-full w-10 h-10 flex items-center justify-center font-semibold text-sm shadow-md transition-transform duration-200 hover:scale-105"
                   >
                     {{ index + 1 }}
                   </div>
@@ -56,18 +56,18 @@
                       <img
                         :src="program.image"
                         :alt="program.title"
-                        class="w-full h-72 max-h-80 object-cover transition-transform duration-700 group-hover:scale-110"
+                        class="w-full h-72 max-h-80 object-cover transition-transform duration-300 group-hover:scale-105"
                         style="aspect-ratio: 16/9"
                       />
                       <!-- Image Overlay -->
                       <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       ></div>
 
                       <!-- Website Link Overlay -->
                       <div
                         v-if="program.website"
-                        class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0"
+                        class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
                       >
                         <a
                           :href="program.website"
@@ -104,7 +104,7 @@
 
                       <div class="mb-4">
                         <h3
-                          class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 leading-tight group-hover:text-primary transition-colors duration-300"
+                          class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 leading-tight group-hover:text-primary transition-colors duration-200"
                         >
                           {{ program.title }}
                         </h3>
@@ -119,14 +119,14 @@
                       <div class="flex flex-col sm:flex-row gap-2 md:gap-3">
                         <router-link :to="program.link" class="group/btn">
                           <button
-                            class="relative w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-accent text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group-hover/btn:bg-accent/90"
+                            class="relative w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-accent text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 overflow-hidden group-hover/btn:bg-accent/90"
                           >
                             <span
                               class="relative z-10 flex items-center justify-center gap-2 text-sm md:text-base"
                             >
                               Selengkapnya
                               <svg
-                                class="w-3 h-3 md:w-4 md:h-4 transition-transform group-hover/btn:translate-x-1"
+                                class="w-3 h-3 md:w-4 md:h-4 transition-transform duration-150 group-hover/btn:translate-x-0.5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -140,7 +140,7 @@
                               </svg>
                             </span>
                             <div
-                              class="absolute inset-0 bg-white/20 translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300"
+                              class="absolute inset-0 bg-white/10 translate-x-full group-hover/btn:translate-x-0 transition-transform duration-200"
                             ></div>
                           </button>
                         </router-link>
@@ -153,7 +153,7 @@
                           class="group/btn"
                         >
                           <button
-                            class="relative w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-white border-2 border-primary text-primary rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:bg-primary hover:text-white overflow-hidden"
+                            class="relative w-full sm:w-auto px-4 md:px-6 py-2 md:py-3 bg-white border-2 border-primary text-primary rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 hover:bg-primary hover:text-white overflow-hidden"
                           >
                             <span
                               class="relative z-10 flex items-center justify-center gap-2 text-sm md:text-base"
@@ -179,10 +179,10 @@
 
                       <!-- Decorative Elements -->
                       <div
-                        class="absolute bottom-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-500"
+                        class="absolute bottom-4 right-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300"
                       >
                         <div
-                          class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent"
+                          class="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent"
                         ></div>
                       </div>
                     </div>
@@ -255,22 +255,22 @@ const programs = computed<Program[]>(() =>
 <style scoped>
 /* Custom Swiper Pagination Styling */
 :deep(.swiper-pagination-bullet) {
-  width: 12px;
-  height: 12px;
-  background: rgba(255, 255, 255, 0.5);
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   opacity: 1;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 :deep(.swiper-pagination-bullet-active) {
   background: white;
-  transform: scale(1.2);
+  transform: scale(1.1);
   border-color: white;
 }
 
-/* Custom shadow for enhanced depth */
+/* Subtle shadow for enhanced depth */
 :deep(.group:hover) {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
 }
 </style>
