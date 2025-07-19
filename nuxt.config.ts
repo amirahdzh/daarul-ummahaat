@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://103.59.160.131/api'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://www.api.daarulummahaat.org/api'
     }
   }
 })
