@@ -7,13 +7,40 @@
     <IndexAboutSection />
 
     <!-- Program Section -->
-    <IndexProgramSection />
+    <ClientOnly>
+      <IndexProgramSection />
+      <template #fallback>
+        <div class="py-16 bg-primary-dark">
+          <div class="container mx-auto px-4 text-center">
+            <div class="text-white">Memuat program unggulan...</div>
+          </div>
+        </div>
+      </template>
+    </ClientOnly>
 
     <!-- Activity Section -->
-    <IndexActivitySection />
+    <ClientOnly>
+      <IndexActivitySection />
+      <template #fallback>
+        <div class="py-16 bg-gray-50">
+          <div class="container mx-auto px-4 text-center">
+            <div class="text-gray-600">Memuat kegiatan terbaru...</div>
+          </div>
+        </div>
+      </template>
+    </ClientOnly>
 
     <!-- Donation Section -->
-    <IndexDonationSection />
+    <ClientOnly>
+      <IndexDonationSection />
+      <template #fallback>
+        <div class="py-16 bg-white">
+          <div class="container mx-auto px-4 text-center">
+            <div class="text-gray-600">Memuat paket donasi...</div>
+          </div>
+        </div>
+      </template>
+    </ClientOnly>
 
     <!-- Quick Links Section -->
     <section class="py-16 bg-gray-50">
@@ -224,11 +251,5 @@ useSeoMeta({
     "Yayasan Daarul Ummahaat adalah lembaga pendidikan dan sosial yang berkomitmen untuk membantu masyarakat melalui program pendidikan, beasiswa, dan kegiatan sosial.",
   ogImage: "/src/assets/logo-du.png",
   twitterCard: "summary_large_image",
-});
-
-// Initialize authentication on page load
-const { initAuth } = useAuth();
-onMounted(() => {
-  initAuth();
 });
 </script>

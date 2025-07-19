@@ -244,7 +244,7 @@ const programs = computed<Program[]>(() =>
     title: item.title,
     description: item.description,
     image: item.image
-      ? `${config.public.apiBase.replace("/api", "")}/storage/${item.image}`
+      ? `${config.public.imageBase}/${item.image}`
       : "/src/assets/home/hero-bg.jpg",
     link: `/programs/${item.slug || item.id}`,
     website: item.external_link || undefined,

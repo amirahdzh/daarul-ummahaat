@@ -294,7 +294,7 @@ const getImageUrl = (imagePath: string): string => {
   if (imagePath.startsWith("http")) {
     return imagePath;
   }
-  return `${config.public.apiBase.replace("/api", "")}/storage/${imagePath}`;
+  return `${config.public.imageBase}/${imagePath}`;
 };
 
 const onImageError = (event: Event) => {

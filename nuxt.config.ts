@@ -16,7 +16,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.daarulummahaat.org/api'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.daarulummahaat.org/api',
+      imageBase: process.env.NUXT_PUBLIC_IMAGE_BASE || 'https://api.daarulummahaat.org/storage'
     }
   }
 })

@@ -137,7 +137,7 @@ const getImageUrl = (imagePath: string): string => {
     return imagePath;
   }
   const config = useRuntimeConfig();
-  return `${config.public.apiBase.replace("/api", "")}/storage/${imagePath}`;
+  return `${config.public.imageBase}/${imagePath}`;
 };
 
 const onImageError = (event: Event) => {
