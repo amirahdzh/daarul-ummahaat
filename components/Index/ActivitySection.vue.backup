@@ -79,62 +79,41 @@
       </div>
     </div>
   </section>
+</template> transition-colors"
+          >
+            Lihat Semua Kegiatan
+          </button>
+        </RouterLink>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { CalendarIcon } from "@heroicons/vue/24/outline";
 
-const config = useRuntimeConfig();
-
-const {
-  data: apiData,
-  pending,
-  error,
-} = useFetch("/activities/past", {
-  baseURL: config.public.apiBase,
-  query: { per_page: 3 },
-  default: () => ({ current_page: 1, data: [] }),
-  server: false,
-});
-
-const activities = computed(() =>
-  (apiData.value?.data || []).map((item) => ({
-    id: item.id,
-    title: item.title,
-    description: item.description,
-    image: item.image
-      ? `${config.public.imageBase}/${item.image}`
-      : "/src/assets/home/hero-bg.jpg",
-    date: formatDate(item.activity_date || item.created_at),
-    slug: item.slug,
-    created_at: item.created_at,
-  }))
-);
-
-// Format date to Indonesian format
-function formatDate(dateString) {
-  if (!dateString) return "";
-
-  const date = new Date(dateString);
-  const months = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
-
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-
-  return `${day} ${month} ${year}`;
-}
+const activities = ref([
+  {
+    title: "Kegiatan Santunan Yatim & Dhuafa",
+    date: "6 Mei 2025",
+    image: "/src/assets/home/hero-bg.jpg",
+    description:
+      "Yayasan menyalurkan bantuan tunai dan sembako kepada puluhan anak yatim dan keluarga dhuafa di lingkungan sekitar.",
+  },
+  {
+    title: "Khataman dan Evaluasi Tahfizh",
+    date: "28 April 2025",
+    image: "/src/assets/home/hero-bg.jpg",
+    description:
+      "Acara khataman Al-Qur’an santri serta evaluasi hafalan dengan dihadiri wali santri dan dewan asatidzah.",
+  },
+  {
+    title: "Kelas Intensif Ramadhan – Bimbel Cordova",
+    date: "1–25 Ramadhan 1446H",
+    image: "/src/assets/home/hero-bg.jpg",
+    description:
+      "Kegiatan belajar tambahan selama Ramadhan untuk siswa SD–SMP yang ingin memperkuat pelajaran dan akhlak Islami.",
+  },
+]);
 </script>
