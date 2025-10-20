@@ -16,8 +16,23 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.daarulummahaat.org/api',
-      imageBase: process.env.NUXT_PUBLIC_IMAGE_BASE || 'https://api.daarulummahaat.org/storage'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api',
+      imageBase: process.env.NUXT_PUBLIC_IMAGE_BASE || 'http://localhost:8000/storage'
     }
-  }
+  },
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'http://localhost:8000/api',
+        changeOrigin: true,
+        prependPath: false,
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json'
+        }
+      }
+    }
+  },
+  ssr: false // Force SPA mode for better auth handling
 })

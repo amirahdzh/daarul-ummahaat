@@ -75,10 +75,14 @@ export const useAuth = () => {
   // Login method
   const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
     try {
+      const headers = await getAuthHeadersWithCsrf()
+      
       const response = await $fetch<AuthResponse>('/login', {
         baseURL: config.public.apiBase,
         method: 'POST',
-        body: credentials
+        headers,
+        body: credentials,
+        credentials: 'include' // Important for CSRF cookies
       })
 
       // Store auth data
@@ -99,10 +103,14 @@ export const useAuth = () => {
   // Register method
   const register = async (userData: RegisterData): Promise<AuthResponse> => {
     try {
+      const headers = await getAuthHeadersWithCsrf()
+      
       const response = await $fetch<AuthResponse>('/register', {
         baseURL: config.public.apiBase,
         method: 'POST',
-        body: userData
+        headers,
+        body: userData,
+        credentials: 'include'
       })
 
       // Store auth data
@@ -211,11 +219,36 @@ export const useAuth = () => {
 
   // Get authorization headers
   const getAuthHeaders = (): Record<string, string> => {
-    if (!token.value) return {}
-    
-    return {
-      'Authorization': `Bearer ${token.value}`
+    const headers: Record<string, string> = {
+      'Accept': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
     }
+    
+    if (token.value) {
+      headers['Authorization'] = `Bearer ${token.value}`
+    }
+    
+    return headers
+  }
+
+  // Get CSRF headers for state-changing requests
+  const getAuthHeadersWithCsrf = async (): Promise<Record<string, string>> => {
+    const headers = getAuthHeaders()
+    
+    // For cross-origin requests, we might need to get CSRF cookie first
+    if (process.client) {
+      try {
+        await $fetch('/sanctum/csrf-cookie', {
+          baseURL: config.public.apiBase.replace('/api', ''),
+          credentials: 'include'
+        })
+      } catch (error) {
+        // If CSRF endpoint doesn't exist, continue without it
+        console.warn('CSRF cookie endpoint not available')
+      }
+    }
+    
+    return headers
   }
 
   // Update user profile
@@ -263,6 +296,7 @@ export const useAuth = () => {
     getCurrentUser,
     hasRole,
     getAuthHeaders,
+    getAuthHeadersWithCsrf,
     updateProfile
   }
 }
