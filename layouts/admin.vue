@@ -2,8 +2,8 @@
   <div class="min-h-screen bg-gray-100">
     <!-- Sidebar -->
     <div
-      class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0"
-      :class="{ '-translate-x-full': !sidebarOpen }"
+      class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out"
+      :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
     >
       <!-- Sidebar Header -->
       <div
@@ -32,13 +32,15 @@
             ></path>
           </svg>
         </button>
+
+        <!-- desktop toggle removed from sidebar header; toggle lives in desktop top bar -->
       </div>
 
       <!-- Navigation -->
       <nav class="mt-8 px-6">
         <div class="space-y-1">
           <!-- Dashboard -->
-          <NuxtLink
+          <!-- <NuxtLink
             to="/admin"
             class="group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors"
             :class="
@@ -61,10 +63,10 @@
               ></path>
             </svg>
             Dashboard
-          </NuxtLink>
+          </NuxtLink> -->
 
           <!-- Donations -->
-          <NuxtLink
+          <!-- <NuxtLink
             to="/admin/donations"
             class="group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors"
             :class="
@@ -87,7 +89,7 @@
               ></path>
             </svg>
             Donasi
-          </NuxtLink>
+          </NuxtLink> -->
 
           <!-- Programs -->
           <NuxtLink
@@ -116,7 +118,7 @@
           </NuxtLink>
 
           <!-- Donation Packages -->
-          <NuxtLink
+          <!-- <NuxtLink
             to="/admin/donation-packages"
             class="group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors"
             :class="
@@ -139,10 +141,10 @@
               ></path>
             </svg>
             Paket Donasi
-          </NuxtLink>
+          </NuxtLink> -->
 
           <!-- Fundraisers -->
-          <NuxtLink
+          <!-- <NuxtLink
             to="/admin/fundraisers"
             class="group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors"
             :class="
@@ -165,7 +167,7 @@
               ></path>
             </svg>
             Penggalangan Dana
-          </NuxtLink>
+          </NuxtLink> -->
 
           <!-- Activities -->
           <NuxtLink
@@ -194,7 +196,7 @@
           </NuxtLink>
 
           <!-- Users -->
-          <NuxtLink
+          <!-- <NuxtLink
             to="/admin/users"
             class="group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors"
             :class="
@@ -217,7 +219,7 @@
               ></path>
             </svg>
             Pengguna
-          </NuxtLink>
+          </NuxtLink> -->
         </div>
 
         <!-- Divider -->
@@ -245,7 +247,7 @@
             </NuxtLink>
 
             <!-- Settings -->
-            <NuxtLink
+            <!-- <NuxtLink
               to="/admin/settings"
               class="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
             >
@@ -269,14 +271,14 @@
                 ></path>
               </svg>
               Pengaturan
-            </NuxtLink>
+            </NuxtLink> -->
           </div>
         </div>
       </nav>
     </div>
 
     <!-- Main Content -->
-    <div class="lg:pl-64">
+    <div :class="[{ 'lg:pl-64': sidebarOpen }, 'transition-all']">
       <!-- Top Bar -->
       <div
         class="sticky top-0 z-40 flex h-16 bg-white border-b border-gray-200 lg:hidden"
@@ -310,7 +312,43 @@
         class="hidden lg:flex sticky top-0 z-40 h-16 bg-white border-b border-gray-200"
       >
         <div class="flex-1 px-6 flex justify-between items-center">
-          <div class="flex-1"></div>
+          <div class="flex items-center gap-3">
+            <!-- Desktop toggle: shows collapse icon when open, open icon when closed -->
+            <button
+              @click="sidebarOpen = !sidebarOpen"
+              class="inline-flex items-center px-3 py-2 rounded text-gray-600 hover:bg-gray-50"
+              aria-label="Toggle sidebar"
+            >
+              <svg
+                v-if="sidebarOpen"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <!-- collapse icon (chevron left) -->
+                <path
+                  fill-rule="evenodd"
+                  d="M12.293 14.707a1 1 0 010-1.414L9.414 10l2.879-3.293a1 1 0 10-1.414-1.414l-4 4a1 1 0 000 1.414l4 4a1 1 0 001.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <svg
+                v-else
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <!-- open icon (chevron right) -->
+                <path
+                  fill-rule="evenodd"
+                  d="M7.707 14.707a1 1 0 010-1.414L10.586 10 7.707 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
           <UserMenu />
         </div>
       </div>

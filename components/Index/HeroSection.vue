@@ -18,7 +18,7 @@
         <div class="flex flex-wrap gap-4">
           <RouterLink to="/register">
             <button
-              class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-md text-lg transition-colors"
+              class="bg-accent text-white px-6 py-3 rounded-md text-lg transition-colors"
             >
               Donasi Sekarang
             </button>

@@ -48,7 +48,7 @@ const handleLogout = async () => {
         <NuxtLink to="/" class="hover:text-accent">Beranda</NuxtLink>
 
         <!-- Program Dropdown -->
-        <div class="relative">
+        <!-- <div class="relative">
           <button
             @click="toggleProgramDropdown"
             class="flex items-center gap-1 hover:text-accent focus:outline-none"
@@ -94,12 +94,12 @@ const handleLogout = async () => {
               Fundraiser
             </NuxtLink>
           </div>
-        </div>
+        </div> -->
 
-        <NuxtLink to="/activities" class="hover:text-accent">Kegiatan</NuxtLink>
+        <!-- <NuxtLink to="/activities" class="hover:text-accent">Kegiatan</NuxtLink> -->
         <NuxtLink to="/about" class="hover:text-accent">Tentang</NuxtLink>
         <NuxtLink to="/contact" class="hover:text-accent">Kontak</NuxtLink>
-        <NuxtLink to="/donations" class="hover:text-accent">Donasi</NuxtLink>
+        <!-- <NuxtLink to="/donations" class="hover:text-accent">Donasi</NuxtLink> -->
 
         <!-- Admin Link for Admin/Editor Users -->
         <NuxtLink
@@ -107,7 +107,7 @@ const handleLogout = async () => {
             user &&
             (user.role?.name === 'admin' || user.role?.name === 'editor')
           "
-          to="/admin"
+          to="/admin/programs"
           class="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
         >
           <svg
@@ -168,12 +168,12 @@ const handleLogout = async () => {
             >
               Profil Saya
             </NuxtLink>
-            <NuxtLink
+            <!-- <NuxtLink
               to="/profile/donations"
               class="block px-4 py-2 hover:bg-gray-100 border-b"
             >
               Riwayat Donasi
-            </NuxtLink>
+            </NuxtLink> -->
             <NuxtLink
               v-if="user.role?.name === 'admin' || user.role?.name === 'editor'"
               to="/admin"

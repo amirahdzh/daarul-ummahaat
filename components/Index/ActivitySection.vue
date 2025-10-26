@@ -61,10 +61,12 @@
           ref="carouselRef"
           class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth py-2 px-2 md:px-6"
         >
-          <div
+          <RouterLink
             v-for="activity in activities"
             :key="activity.id"
-            class="snap-start flex-shrink-0 w-full max-w-[360px] rounded-lg overflow-hidden"
+            :to="`/activities/${activity.slug || activity.id}`"
+            class="block snap-start flex-shrink-0 w-full max-w-[360px] rounded-lg overflow-hidden"
+            aria-label="Lihat detail kegiatan"
           >
             <!-- Image container (kept 4:3 as requested) -->
             <div class="relative w-full" style="aspect-ratio: 4 / 3">
@@ -89,37 +91,25 @@
 
               <!-- Bottom overlay with semi-transparent white background (compact) -->
               <div
-                class="absolute left-0 right-0 bottom-0 p-3"
+                class="absolute left-0 right-0 bottom-0 p-3 max-h-36 overflow-hidden"
                 style="
                   background: rgba(255, 255, 255, 0.5);
                   backdrop-filter: blur(4px);
                 "
               >
-                <div class="flex items-center text-primary mb-1">
+                <div class="flex items-center text-primary">
                   <CalendarIcon class="mr-2 h-4 w-4 text-gray-900" />
                   <span class="text-sm text-gray-900">{{ activity.date }}</span>
                 </div>
                 <h3
-                  class="sm:text-lg text-md font-bold text-gray-900 leading-tight mb-1"
+                  class="sm:text-lg text-md font-bold text-gray-900 leading-tight"
                   style="min-height: 36px"
                 >
                   {{ activity.title }}
                 </h3>
-                <!-- <p class="text-sm text-gray-800 line-clamp-2">
-                  {{ excerpt(activity.description) }}
-                </p>
-
-                <div class="mt-3">
-                  <RouterLink
-                    :to="`/activities/${activity.slug || activity.id}`"
-                    class="text-accent hover:text-hover-accent text-sm font-medium"
-                  >
-                    Lebih lanjut →
-                  </RouterLink>
-                </div> -->
               </div>
             </div>
-          </div>
+          </RouterLink>
         </div>
       </div>
 
@@ -146,7 +136,7 @@
       </div>
 
       <!-- View All Activities Button -->
-      <div class="text-center mt-12">
+      <!-- <div class="text-center mt-12">
         <RouterLink to="/activities">
           <button
             class="bg-accent hover:bg-hover-accent text-white px-6 py-2 rounded-lg shadow transition-colors"
@@ -154,7 +144,7 @@
             Lihat Semua Kegiatan
           </button>
         </RouterLink>
-      </div>
+      </div> -->
     </div>
   </section>
 </template>

@@ -1,16 +1,15 @@
 <template>
   <div class="space-y-6 pt-6 pb-10 px-4 md:px-8 lg:px-12">
-    <!-- Header -->
     <div class="flex justify-between items-center">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Kelola Program</h1>
+        <h1 class="text-2xl font-bold text-gray-900">Kelola Kegiatan</h1>
         <p class="mt-1 text-sm text-gray-600">
-          Kelola program pendidikan dan sosial yayasan
+          Kelola kegiatan donasi dan acara yayasan
         </p>
       </div>
       <button
         @click="showCreateForm = true"
-        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
       >
         <svg
           class="-ml-1 mr-2 h-5 w-5"
@@ -24,16 +23,16 @@
             clip-rule="evenodd"
           />
         </svg>
-        Tambah Program
+        Tambah Kegiatan
       </button>
     </div>
 
-    <!-- Filters -->
+    <!-- Filters (simple search + status) -->
     <div class="bg-white shadow rounded-lg p-6">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2"
-            >Cari Program</label
+            >Cari Kegiatan</label
           >
           <input
             v-model="searchQuery"
@@ -66,7 +65,7 @@
       </div>
     </div>
 
-    <!-- Programs Table -->
+    <!-- Activities list -->
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
       <div v-if="pending" class="p-8 text-center">
         <div
@@ -86,10 +85,10 @@
       </div>
 
       <ul
-        v-else-if="programs && programs.length > 0"
+        v-else-if="activities && activities.length > 0"
         class="divide-y divide-gray-200"
       >
-        <li v-for="program in programs" :key="program.id" class="p-4 sm:p-6">
+        <li v-for="act in activities" :key="act.id" class="p-4 sm:p-6">
           <div
             class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0"
           >
@@ -97,17 +96,17 @@
               class="flex items-start sm:items-center space-x-4 w-full cursor-pointer"
               role="button"
               tabindex="0"
-              @click="editProgram(program)"
-              @keydown.enter="editProgram(program)"
+              @click="editActivity(act)"
+              @keydown.enter="editActivity(act)"
             >
               <div class="flex-shrink-0">
                 <div
                   class="w-24 h-16 sm:w-16 sm:h-16 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center"
                 >
                   <img
-                    v-if="program.image"
-                    :src="program.image"
-                    :alt="program.title"
+                    v-if="act.image_url"
+                    :src="act.image_url"
+                    :alt="act.title"
                     class="w-full h-full object-cover"
                   />
                   <div
@@ -135,34 +134,38 @@
                 <h3
                   class="text-base sm:text-lg font-medium text-gray-900 truncate"
                 >
-                  {{ program.title }}
+                  {{ act.title }}
                 </h3>
                 <p class="text-sm text-gray-500 mt-1 line-clamp-2">
-                  {{ program.description }}
+                  {{ act.description }}
                 </p>
                 <div class="flex items-center mt-2 flex-wrap gap-2">
                   <span
                     :class="{
-                      'bg-green-100 text-green-800': program.is_published,
-                      'bg-gray-100 text-gray-800': !program.is_published,
+                      'bg-green-100 text-green-800': act.is_published,
+                      'bg-gray-100 text-gray-800': !act.is_published,
                     }"
                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    >{{ act.is_published ? "Dipublikasi" : "Draft" }}</span
                   >
-                    {{ program.is_published ? "Dipublikasi" : "Draft" }}
-                  </span>
-                  <span class="text-xs text-gray-500">
-                    Dibuat {{ formatDate(program.created_at) }}
-                  </span>
+                  <span class="text-xs text-gray-500"
+                    >Acara: {{ formatDate(act.event_date) }}</span
+                  >
+                </div>
+                <div class="text-xs text-gray-500 mt-1">
+                  Dibuat oleh: {{ act.creator?.name || "-" }}
                 </div>
               </div>
             </div>
 
-            <div class="w-full sm:w-auto mt-4 sm:mt-0 sm:ml-4">
-              <div class="flex flex-row items-center space-x-3 sm:justify-end">
+            <div class="w-full sm:w-auto">
+              <div
+                class="mt-2 sm:mt-0 flex flex-row items-center sm:space-x-2 space-x-2 sm:justify-end flex-wrap"
+              >
                 <button
-                  @click.stop="editProgram(program)"
-                  class="inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                  aria-label="Edit program"
+                  @click.stop="editActivity(act)"
+                  class="inline-flex items-center justify-center p-3 sm:p-2 w-full sm:w-auto border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  aria-label="Edit kegiatan"
                 >
                   <svg
                     class="h-4 w-4"
@@ -178,16 +181,16 @@
                 </button>
 
                 <button
-                  @click.stop="toggleStatus(program)"
+                  @click.stop="toggleStatus(act)"
                   :class="{
-                    'text-green-600 hover:text-green-500': program.is_published,
-                    'text-gray-600 hover:text-gray-500': !program.is_published,
+                    'text-green-600 hover:text-green-500': act.is_published,
+                    'text-gray-600 hover:text-gray-500': !act.is_published,
                   }"
-                  class="inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50"
-                  aria-label="Toggle publish status"
+                  class="inline-flex items-center justify-center p-3 sm:p-2 w-full sm:w-auto border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50"
+                  aria-label="Toggle publikasi"
                 >
                   <svg
-                    v-if="program.is_published"
+                    v-if="act.is_published"
                     class="h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -212,16 +215,13 @@
                       d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
                       clip-rule="evenodd"
                     />
-                    <path
-                      d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"
-                    />
                   </svg>
                 </button>
 
                 <button
-                  @click.stop="deleteProgram(program)"
-                  class="inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-red-600 bg-white hover:bg-red-50"
-                  aria-label="Delete program"
+                  @click.stop="deleteActivity(act)"
+                  class="inline-flex items-center justify-center p-3 sm:p-2 w-full sm:w-auto border border-gray-300 rounded-md text-sm font-medium text-red-600 bg-white hover:bg-red-50"
+                  aria-label="Hapus kegiatan"
                 >
                   <svg
                     class="h-4 w-4"
@@ -258,10 +258,10 @@
           />
         </svg>
         <h3 class="mt-2 text-sm font-medium text-gray-900">
-          Tidak ada program
+          Tidak ada kegiatan
         </h3>
         <p class="mt-1 text-sm text-gray-500">
-          Mulai dengan membuat program baru
+          Mulai dengan membuat kegiatan baru
         </p>
       </div>
     </div>
@@ -293,7 +293,7 @@
             Menampilkan
             <span class="font-medium">{{ data.meta.from || 0 }}</span> -
             <span class="font-medium">{{ data.meta.to || 0 }}</span> dari
-            <span class="font-medium">{{ data.meta.total || 0 }}</span> program
+            <span class="font-medium">{{ data.meta.total || 0 }}</span> kegiatan
           </p>
         </div>
         <div>
@@ -318,138 +318,138 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Create/Edit Modal -->
-  <div
-    v-if="showCreateForm || showEditForm"
-    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
-    @click="closeModal"
-  >
+    <!-- Create/Edit Modal -->
     <div
-      class="relative top-0 mx-auto p-5 border w-full h-full sm:top-20 sm:w-11/12 md:w-2/3 lg:w-1/2 sm:h-auto shadow-lg rounded-none sm:rounded-md bg-white"
-      @click.stop
+      v-if="showCreateForm || showEditForm"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+      @click="closeModal"
     >
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-medium text-gray-900">
-          {{ showCreateForm ? "Tambah Program Baru" : "Edit Program" }}
-        </h3>
-        <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
-          <svg
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+      <div
+        class="relative top-0 mx-auto p-5 border w-full h-full sm:top-20 sm:w-11/12 md:w-2/3 lg:w-1/2 sm:h-auto shadow-lg rounded-none sm:rounded-md bg-white"
+        @click.stop
+      >
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-medium text-gray-900">
+            {{ showCreateForm ? "Tambah Kegiatan Baru" : "Edit Kegiatan" }}
+          </h3>
+          <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <form @submit.prevent="submitForm">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Judul Kegiatan</label
+              >
+              <input
+                v-model="form.title"
+                type="text"
+                required
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Deskripsi</label
+              >
+              <textarea
+                v-model="form.description"
+                rows="4"
+                required
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Tanggal & Waktu Acara</label
+              >
+              <input
+                v-model="form.event_date_local"
+                type="datetime-local"
+                required
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Gambar (Opsional)</label
+              >
+              <input
+                type="file"
+                accept="image/*"
+                @change="handleImageUpload"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div class="flex items-center">
+              <input
+                id="is_published"
+                v-model="form.is_published"
+                type="checkbox"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label for="is_published" class="ml-2 block text-sm text-gray-900"
+                >Publikasikan sekarang</label
+              >
+            </div>
+          </div>
+
+          <div v-if="formError" class="mt-4 rounded-md bg-red-50 p-4">
+            <div class="text-sm text-red-700">{{ formError }}</div>
+          </div>
+
+          <div
+            class="mt-6 flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+            <button
+              type="button"
+              @click="closeModal"
+              class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              :disabled="formLoading"
+              class="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+            >
+              {{
+                formLoading
+                  ? "Menyimpan..."
+                  : showCreateForm
+                  ? "Simpan"
+                  : "Update"
+              }}
+            </button>
+          </div>
+        </form>
       </div>
-
-      <form @submit.prevent="submitForm">
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >Judul Program</label
-            >
-            <input
-              v-model="form.title"
-              type="text"
-              required
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >Deskripsi</label
-            >
-            <textarea
-              v-model="form.description"
-              rows="4"
-              required
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            ></textarea>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >Link Eksternal (Opsional)</label
-            >
-            <input
-              v-model="form.external_link"
-              type="url"
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >Gambar (Opsional)</label
-            >
-            <input
-              type="file"
-              accept="image/*"
-              @change="handleImageUpload"
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div class="flex items-center">
-            <input
-              id="is_published"
-              v-model="form.is_published"
-              type="checkbox"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label for="is_published" class="ml-2 block text-sm text-gray-900">
-              Publikasikan sekarang
-            </label>
-          </div>
-        </div>
-
-        <div v-if="formError" class="mt-4 rounded-md bg-red-50 p-4">
-          <div class="text-sm text-red-700">{{ formError }}</div>
-        </div>
-
-        <div
-          class="mt-6 flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3"
-        >
-          <button
-            type="button"
-            @click="closeModal"
-            class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-          >
-            Batal
-          </button>
-          <button
-            type="submit"
-            :disabled="formLoading"
-            class="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-          >
-            {{
-              formLoading
-                ? "Menyimpan..."
-                : showCreateForm
-                ? "Simpan"
-                : "Update"
-            }}
-          </button>
-        </div>
-      </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  title: "Kelola Program - Admin",
-  description: "Kelola program pendidikan dan sosial",
+  title: "Kelola Kegiatan - Admin",
   layout: "admin",
   middleware: "admin",
 });
@@ -467,64 +467,58 @@ const showEditForm = ref(false);
 const formLoading = ref(false);
 const formError = ref("");
 
-const editingProgram = ref<AdminProgram | null>(null);
-
-interface AdminProgram {
+interface AdminActivity {
   id: number;
   title: string;
   description: string;
-  external_link?: string;
+  event_date?: string; // ISO
   image?: string;
+  image_url?: string;
+  created_by?: number;
   is_published?: boolean;
   created_at?: string;
+  updated_at?: string;
+  creator?: { id: number; name: string } | null;
 }
+
+const editingActivity = ref<AdminActivity | null>(null);
 
 const form = reactive({
   title: "",
   description: "",
-  external_link: "",
+  event_date_local: "", // for datetime-local input
   image: "",
   imageFile: null as File | null,
   is_published: false,
 });
 
-// Build query parameters
 const queryParams = computed(() => {
-  const params: any = {
-    per_page: 10,
-    page: currentPage.value,
-  };
-
+  const params: any = { per_page: 10, page: currentPage.value };
   if (searchQuery.value) params.search = searchQuery.value;
-  if (filterStatus.value) {
+  if (filterStatus.value)
     params.is_published = filterStatus.value === "published" ? 1 : 0;
-  }
-
   return params;
 });
 
-// Fetch programs
 const { data, pending, error, refresh } = await useFetch<{
-  data: AdminProgram[];
+  data: AdminActivity[];
   meta: any;
-}>("/admin/programs", {
+}>("/activities", {
   baseURL: config.public.apiBase,
   query: queryParams,
   headers: getAuthHeaders(),
   default: () => ({ data: [], meta: null }),
 });
 
-const programs = computed<AdminProgram[]>(
+const activities = computed<AdminActivity[]>(
   () => (data.value as any)?.data || []
 );
 
-// Methods
 const resetFilters = () => {
   searchQuery.value = "";
   filterStatus.value = "";
   currentPage.value = 1;
 };
-
 const changePage = (page: number) => {
   currentPage.value = page;
 };
@@ -534,33 +528,34 @@ const closeModal = () => {
   showEditForm.value = false;
   resetForm();
 };
-
 const resetForm = () => {
   form.title = "";
   form.description = "";
-  form.external_link = "";
+  form.event_date_local = "";
   form.image = "";
+  form.imageFile = null;
   form.is_published = false;
-  editingProgram.value = null;
+  editingActivity.value = null;
   formError.value = "";
 };
 
-const editProgram = (program: any) => {
-  editingProgram.value = program;
-  form.title = program.title;
-  form.description = program.description;
-  form.external_link = program.external_link || "";
-  form.image = program.image || "";
-  form.is_published = program.is_published;
+const editActivity = (act: any) => {
+  editingActivity.value = act;
+  form.title = act.title || "";
+  form.description = act.description || "";
+  // convert ISO to datetime-local compatible value (without timezone)
+  form.event_date_local = act.event_date
+    ? new Date(act.event_date).toISOString().slice(0, 16)
+    : "";
+  form.image = act.image_url || act.image || "";
+  form.is_published = !!act.is_published;
   showEditForm.value = true;
 };
 
 const handleImageUpload = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0];
   if (file) {
-    // keep the File so we can send it as FormData on submit
     form.imageFile = file;
-    // optional preview in the input (object URL) so the admin sees it
     try {
       form.image = URL.createObjectURL(file);
     } catch (e) {
@@ -572,93 +567,86 @@ const handleImageUpload = (event: Event) => {
 const submitForm = async () => {
   formLoading.value = true;
   formError.value = "";
-
   try {
-    // For create/update
     const url =
-      showEditForm.value && editingProgram.value
-        ? `/admin/programs/${editingProgram.value.id}`
-        : "/admin/programs";
+      showEditForm.value && editingActivity.value
+        ? `/activities/${editingActivity.value.id}`
+        : "/activities";
 
-    // Build FormData because backend expects multipart/form-data for file upload
     const fd = new FormData();
     fd.append("title", form.title || "");
     fd.append("description", form.description || "");
-    fd.append("external_link", form.external_link || "");
-    fd.append("is_published", form.is_published ? "1" : "0");
-    if (form.imageFile) {
-      fd.append("image", form.imageFile as File);
+    // convert local datetime to ISO string (UTC)
+    if (form.event_date_local) {
+      const iso = new Date(form.event_date_local).toISOString();
+      fd.append("event_date", iso);
+    } else {
+      fd.append("event_date", "");
     }
+    fd.append("is_published", form.is_published ? "1" : "0");
+    if (form.imageFile) fd.append("image", form.imageFile as File);
 
-    // Some backends don't accept PUT with multipart; use POST + _method=PUT for updates
     const isUpdate = !!showEditForm.value;
-    const fetchUrl = url;
     if (isUpdate) fd.append("_method", "PUT");
 
-    await $fetch(fetchUrl, {
+    await $fetch(url, {
       baseURL: config.public.apiBase,
-      method: isUpdate ? "POST" : "POST",
-      headers: getAuthHeaders(), // don't set Content-Type; browser will set multipart boundary
+      method: "POST",
+      headers: getAuthHeaders(),
       body: fd,
     });
 
     closeModal();
     await refresh();
   } catch (err: any) {
-    formError.value = err.data?.message || "Gagal menyimpan program";
+    formError.value = err.data?.message || "Gagal menyimpan kegiatan";
   } finally {
     formLoading.value = false;
   }
 };
 
-const toggleStatus = async (program: any) => {
+const toggleStatus = async (act: any) => {
   try {
-    await $fetch(`/admin/programs/${program.id}`, {
+    await $fetch(`/activities/${act.id}`, {
       baseURL: config.public.apiBase,
       method: "PUT",
       headers: getAuthHeaders(),
-      body: { ...program, is_published: !program.is_published },
+      body: { ...act, is_published: !act.is_published },
     });
-
     await refresh();
   } catch (err: any) {
-    alert("Gagal mengubah status program");
+    alert("Gagal mengubah status kegiatan");
   }
 };
 
-const deleteProgram = async (program: any) => {
-  if (!confirm(`Yakin ingin menghapus program "${program.title}"?`)) {
-    return;
-  }
-
+const deleteActivity = async (act: any) => {
+  if (!confirm(`Yakin ingin menghapus kegiatan "${act.title}"?`)) return;
   try {
-    // For delete
-    await $fetch(`/admin/programs/${program.id}`, {
+    await $fetch(`/activities/${act.id}`, {
       baseURL: config.public.apiBase,
       method: "DELETE",
       headers: getAuthHeaders(),
     });
-
     await refresh();
   } catch (err: any) {
-    alert("Gagal menghapus program");
+    alert("Gagal menghapus kegiatan");
   }
 };
 
 const formatDate = (dateString?: string) => {
   if (!dateString) return "-";
-  return new Date(dateString).toLocaleDateString("id-ID", {
+  return new Date(dateString).toLocaleString("id-ID", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
-// Watch for search/filter changes
 watch([searchQuery, filterStatus], () => {
   currentPage.value = 1;
 });
-
 watch([searchQuery, filterStatus, currentPage], () => {
   refresh();
 });

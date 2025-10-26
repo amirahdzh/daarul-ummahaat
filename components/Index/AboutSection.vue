@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4">
       <!-- Section Title -->
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-primary mb-4">Tentang Kami</h2>
+        <h2 class="text-3xl font-bold text-accent mb-4">Tentang Kami</h2>
         <div class="w-24 h-1 bg-highlight mx-auto mb-6"></div>
         <!-- <p class="text-shadow max-w-2xl mx-auto">
           Yayasan Daarul Ummahaat merupakan lembaga nirlaba yang bergerak di
@@ -60,7 +60,7 @@
       <div class="text-center mt-6">
         <NuxtLink
           to="/about"
-          class="w-full sm:inline-flex sm:w-auto justify-center items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg text-base font-medium s"
+          class="w-full sm:inline-flex sm:w-auto justify-center items-center gap-2 bg-accent text-white px-6 py-3 rounded-lg text-base font-medium s"
           aria-label="Baca selengkapnya tentang Daarul Ummahaat"
         >
           <span>Selengkapnya</span>

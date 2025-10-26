@@ -1,5 +1,16 @@
 <template>
   <div class="min-h-screen bg-gray-50">
+    <!-- Development watermark: non-interactive, centered, large, visible on all viewports -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center px-4 py-6"
+    >
+      <div
+        class="transform -rotate-12 opacity-10 text-red-600 font-extrabold select-none px-6 py-3 rounded-md text-4xl sm:text-5xl md:text-6xl tracking-wider whitespace-nowrap"
+      >
+        MOCK — ON DEVELOPMENT
+      </div>
+    </div>
     <!-- Page Header -->
     <div class="bg-white shadow-sm border-b">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

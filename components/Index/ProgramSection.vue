@@ -17,48 +17,50 @@
 
           <template v-else>
             <div v-if="programs.length > 0">
-              <div
-                v-for="(program, i) in programs"
-                :key="program.id"
-                class="flex flex-col md:flex-row items-start gap-6 mb-6 md:mb-8"
-                :class="{ 'md:flex-row-reverse': i % 2 === 1 }"
-              >
-                <!-- image (40%) -->
-                <div class="w-full md:w-2/5 flex-shrink-0">
-                  <img
-                    :src="program.image"
-                    :alt="program.title"
-                    loading="lazy"
-                    class="w-full h-64 sm:h-72 md:h-64 lg:h-80 object-cover rounded-lg"
-                  />
-                </div>
+              <div class="divide-y divide-white/10">
+                <div
+                  v-for="(program, i) in programs"
+                  :key="program.id"
+                  class="flex flex-col md:flex-row items-start gap-6 py-6 md:py-8"
+                  :class="{ 'md:flex-row-reverse': i % 2 === 1 }"
+                >
+                  <!-- image (40%) -->
+                  <div class="w-full md:w-2/5 flex-shrink-0">
+                    <img
+                      :src="program.image"
+                      :alt="program.title"
+                      loading="lazy"
+                      class="w-full h-64 sm:h-72 md:h-64 lg:h-80 object-cover rounded-lg"
+                    />
+                  </div>
 
-                <!-- text (60%) -->
-                <div class="w-full md:w-3/5 p-2 md:p-4">
-                  <h3 class="text-2xl font-semibold text-white mb-2">
-                    {{ program.title }}
-                  </h3>
-                  <p class="text-white/90 mb-4 text-justify">
-                    {{ program.description }}
-                  </p>
-                  <div class="flex flex-wrap gap-3">
-                    <NuxtLink
-                      :to="program.link"
-                      class="text-white/70 hover:text-white text-sm underline underline-offset-2 hover:underline-offset-4 transition-all duration-200"
-                      :aria-label="`Lihat program ${program.title}`"
-                    >
-                      Selengkapnya
-                    </NuxtLink>
+                  <!-- text (60%) -->
+                  <div class="w-full md:w-3/5 p-2 md:p-4">
+                    <h3 class="text-2xl font-semibold text-white mb-2">
+                      {{ program.title }}
+                    </h3>
+                    <p class="text-white/90 mb-4 text-justify">
+                      {{ program.description }}
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                      <!-- <NuxtLink
+                        :to="program.link"
+                        class="text-white/70 hover:text-white text-sm underline underline-offset-2 hover:underline-offset-4 transition-all duration-200"
+                        :aria-label="`Lihat program ${program.title}`"
+                      >
+                        Selengkapnya
+                      </NuxtLink> -->
 
-                    <a
-                      v-if="program.website"
-                      :href="program.website"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="text-white/70 hover:text-white text-sm underline underline-offset-2 hover:underline-offset-4 transition-all duration-200"
-                    >
-                      Website →
-                    </a>
+                      <a
+                        v-if="program.website"
+                        :href="program.website"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-white/70 hover:text-white text-sm underline underline-offset-2 hover:underline-offset-4 transition-all duration-200"
+                      >
+                        Website →
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

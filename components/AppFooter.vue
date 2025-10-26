@@ -4,7 +4,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         <!-- Tentang Kami -->
         <div>
-          <h3 class="text-xl font-bold mb-4 border-b border-highlight pb-2">
+          <h3 class="text-xl font-bold mb-4 border-b border-primary pb-2">
             Tentang Yayasan
           </h3>
           <div class="mb-4">
@@ -29,95 +29,92 @@
 
         <!-- Navigasi Cepat -->
         <div>
-          <h3 class="text-xl font-bold mb-4 border-b border-highlight pb-2">
+          <h3 class="text-xl font-bold mb-4 border-b border-primary pb-2">
             Navigasi
           </h3>
           <ul class="space-y-2">
             <li>
-              <RouterLink
-                to="/"
-                class="text-background/70 hover:text-highlight"
-              >
+              <RouterLink to="/" class="text-background/70 hover:text-primary">
                 Beranda
               </RouterLink>
             </li>
             <li>
               <RouterLink
                 to="/about"
-                class="text-background/70 hover:text-highlight"
+                class="text-background/70 hover:text-primary"
               >
                 Tentang Kami
               </RouterLink>
             </li>
-            <li>
+            <!-- <li>
               <RouterLink
                 to="/programs"
-                class="text-background/70 hover:text-highlight"
+                class="text-background/70 hover:text-primary"
               >
                 Program Unggulan
               </RouterLink>
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <RouterLink
                 to="/gallery"
-                class="text-background/70 hover:text-highlight"
+                class="text-background/70 hover:text-primary"
               >
                 Galeri Kegiatan
               </RouterLink>
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <RouterLink
                 to="/blog"
-                class="text-background/70 hover:text-highlight"
+                class="text-background/70 hover:text-primary"
               >
                 Berita & Artikel
               </RouterLink>
-            </li>
+            </li> -->
             <li>
               <RouterLink
                 to="/contact"
-                class="text-background/70 hover:text-highlight"
+                class="text-background/70 hover:text-primary"
               >
                 Hubungi Kami
               </RouterLink>
             </li>
-            <li>
+            <!-- <li>
               <RouterLink
                 to="/register"
-                class="text-background/70 hover:text-highlight"
+                class="text-background/70 hover:text-primary"
               >
                 Pendaftaran
               </RouterLink>
-            </li>
+            </li> -->
           </ul>
         </div>
 
         <!-- Kontak -->
         <div>
-          <h3 class="text-xl font-bold mb-4 border-b border-highlight pb-2">
+          <h3 class="text-xl font-bold mb-4 border-b border-primary pb-2">
             Kontak
           </h3>
           <ul class="space-y-4 mb-4">
             <li class="flex items-start">
-              <MapPinIcon class="text-highlight mr-2 shrink-0 mt-1 w-5 h-5" />
+              <MapPinIcon class="text-primary mr-2 shrink-0 mt-1 w-5 h-5" />
               <span class="text-background/70">
                 Jl. Contoh No. 123, Sleman, Yogyakarta 55293
               </span>
             </li>
             <li class="flex items-center">
-              <PhoneIcon class="text-highlight mr-2 shrink-0 w-5 h-5" />
+              <PhoneIcon class="text-primary mr-2 shrink-0 w-5 h-5" />
               <a
                 href="tel:+6281234567890"
-                class="text-background/70 hover:text-highlight"
+                class="text-background/70 hover:text-primary"
               >
                 +62 812-3456-7890
               </a>
             </li>
             <li class="flex items-center">
-              <EnvelopeIcon class="text-highlight mr-2 shrink-0 w-5 h-5" />
+              <EnvelopeIcon class="text-primary mr-2 shrink-0 w-5 h-5" />
               <a
                 href="mailto:info@daarulummahaat.org"
-                class="text-background/70 hover:text-highlight"
+                class="text-background/70 hover:text-primary"
               >
                 info@daarulummahaat.org
               </a>
@@ -126,7 +123,7 @@
 
           <!-- Google Maps Embed -->
           <div
-            class="w-full h-48 md:h-40 rounded overflow-hidden border border-highlight"
+            class="w-full h-48 md:h-40 rounded overflow-hidden border border-primary"
           >
             <iframe
               class="w-full h-full"
