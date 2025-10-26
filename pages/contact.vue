@@ -12,14 +12,31 @@
 
     <!-- Dev status banner -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-      <div role="status" aria-live="polite" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+      <div
+        role="status"
+        aria-live="polite"
+        class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md"
+      >
         <div class="flex items-start">
-          <svg class="flex-shrink-0 h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.72-1.36 3.485 0l5.516 9.81c.75 1.333-.213 2.991-1.742 2.991H4.483c-1.53 0-2.492-1.658-1.742-2.99l5.516-9.811zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-.993.883L9 6v4a1 1 0 001.993.117L11 10V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          <svg
+            class="flex-shrink-0 h-5 w-5 text-yellow-400"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.257 3.099c.765-1.36 2.72-1.36 3.485 0l5.516 9.81c.75 1.333-.213 2.991-1.742 2.991H4.483c-1.53 0-2.492-1.658-1.742-2.99l5.516-9.811zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-8a1 1 0 00-.993.883L9 6v4a1 1 0 001.993.117L11 10V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
           </svg>
           <div class="ml-3 text-sm text-yellow-700">
             <p class="font-semibold">Fitur dalam pengembangan</p>
-            <p class="mt-1">Halaman kontak saat ini menggunakan fungsi mock — pesan tidak dikirim ke server di lingkungan ini.</p>
+            <p class="mt-1">
+              Halaman kontak saat ini menggunakan fungsi mock — pesan tidak
+              dikirim ke server di lingkungan ini.
+            </p>
           </div>
         </div>
       </div>
