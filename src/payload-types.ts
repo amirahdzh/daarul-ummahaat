@@ -67,17 +67,40 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    programs: Program;
+    'program-categories': ProgramCategory;
+    events: Event;
+    'event-categories': EventCategory;
+    'gallery-images': GalleryImage;
+    'gallery-categories': GalleryCategory;
+    'impact-statistics': ImpactStatistic;
+    'legal-documents': LegalDocument;
     media: Media;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    programs: {
+      gallery: 'gallery-images';
+    };
+    events: {
+      gallery: 'gallery-images';
+    };
+  };
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    programs: ProgramsSelect<false> | ProgramsSelect<true>;
+    'program-categories': ProgramCategoriesSelect<false> | ProgramCategoriesSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    'event-categories': EventCategoriesSelect<false> | EventCategoriesSelect<true>;
+    'gallery-images': GalleryImagesSelect<false> | GalleryImagesSelect<true>;
+    'gallery-categories': GalleryCategoriesSelect<false> | GalleryCategoriesSelect<true>;
+    'impact-statistics': ImpactStatisticsSelect<false> | ImpactStatisticsSelect<true>;
+    'legal-documents': LegalDocumentsSelect<false> | LegalDocumentsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -87,8 +110,20 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'home-page': HomePage;
+    'foundation-profile': FoundationProfile;
+    'donation-info': DonationInfo;
+    'contact-info': ContactInfo;
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    'foundation-profile': FoundationProfileSelect<false> | FoundationProfileSelect<true>;
+    'donation-info': DonationInfoSelect<false> | DonationInfoSelect<true>;
+    'contact-info': ContactInfoSelect<false> | ContactInfoSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -119,6 +154,391 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs".
+ */
+export interface Program {
+  id: number;
+  name: string;
+  /**
+   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
+   */
+  slug: string;
+  category: number | ProgramCategory;
+  programStatus: 'active' | 'seasonal' | 'completed';
+  /**
+   * The home page shows up to six featured programs.
+   */
+  featured?: boolean | null;
+  /**
+   * Shown on program cards. Up to 200 characters.
+   */
+  shortDescription: string;
+  /**
+   * Recommended. A landscape photo works best.
+   */
+  featuredImage?: (number | null) | Media;
+  targetBeneficiaries?: string | null;
+  objectives?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  activities?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  location?: string | null;
+  schedule?: string | null;
+  /**
+   * Photos linked to this program. To add one, open it in Gallery photos and choose this program.
+   */
+  gallery?: {
+    docs?: (number | GalleryImage)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  showDonationCta?: boolean | null;
+  /**
+   * Optional. A web address, for example a Google Form. Leave empty for none.
+   */
+  registrationLink?: string | null;
+  /**
+   * Optional. When left empty the page title and short description are used automatically.
+   */
+  seo?: {
+    /**
+     * Title shown in Google results. Up to 70 characters.
+     */
+    metaTitle?: string | null;
+    /**
+     * Summary shown in Google results. Up to 160 characters.
+     */
+    metaDescription?: string | null;
+    /**
+     * Image shown when the page is shared on WhatsApp or social media.
+     */
+    ogImage?: (number | null) | Media;
+    noIndex?: boolean | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "program-categories".
+ */
+export interface ProgramCategory {
+  id: number;
+  name: string;
+  /**
+   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
+   */
+  slug: string;
+  /**
+   * Lower numbers come first in filters and menus.
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Describes the image for people who cannot see it, and for search engines.
+   */
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    large?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-images".
+ */
+export interface GalleryImage {
+  id: number;
+  title?: string | null;
+  /**
+   * Shown under the photo in the lightbox.
+   */
+  caption?: string | null;
+  /**
+   * Optional. Filled in from the title or caption when left empty.
+   */
+  alt?: string | null;
+  category?: (number | null) | GalleryCategory;
+  /**
+   * Optional. Shows this photo on that program page.
+   */
+  program?: (number | null) | Program;
+  /**
+   * Optional. Shows this photo on that event page.
+   */
+  event?: (number | null) | Event;
+  featured?: boolean | null;
+  /**
+   * Lower numbers come first. Photos with the same number show newest first.
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    large?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-categories".
+ */
+export interface GalleryCategory {
+  id: number;
+  name: string;
+  /**
+   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
+   */
+  slug: string;
+  /**
+   * Lower numbers come first in filters and menus.
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  name: string;
+  /**
+   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
+   */
+  slug: string;
+  eventDate: string;
+  /**
+   * Optional, for example 08.00 - 12.00 WIB.
+   */
+  eventTime?: string | null;
+  category?: (number | null) | EventCategory;
+  /**
+   * Shown on event cards. Up to 200 characters.
+   */
+  shortDescription?: string | null;
+  featuredImage?: (number | null) | Media;
+  location?: string | null;
+  googleMapsUrl?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Optional. Leave empty if no registration is needed.
+   */
+  registrationLink?: string | null;
+  /**
+   * Optional. For example a YouTube link.
+   */
+  videoLink?: string | null;
+  /**
+   * Photos linked to this event. To add one, open it in Gallery photos and choose this event.
+   */
+  gallery?: {
+    docs?: (number | GalleryImage)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  /**
+   * Optional. When left empty the page title and short description are used automatically.
+   */
+  seo?: {
+    /**
+     * Title shown in Google results. Up to 70 characters.
+     */
+    metaTitle?: string | null;
+    /**
+     * Summary shown in Google results. Up to 160 characters.
+     */
+    metaDescription?: string | null;
+    /**
+     * Image shown when the page is shared on WhatsApp or social media.
+     */
+    ogImage?: (number | null) | Media;
+    noIndex?: boolean | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-categories".
+ */
+export interface EventCategory {
+  id: number;
+  name: string;
+  /**
+   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
+   */
+  slug: string;
+  /**
+   * Lower numbers come first in filters and menus.
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "impact-statistics".
+ */
+export interface ImpactStatistic {
+  id: number;
+  /**
+   * For example: Yatim Dibina
+   */
+  label: string;
+  /**
+   * Shown as typed, so "100+" and "1.000" both work.
+   */
+  value: string;
+  description?: string | null;
+  icon?: (number | null) | Media;
+  /**
+   * Lower numbers come first.
+   */
+  sortOrder?: number | null;
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-documents".
+ */
+export interface LegalDocument {
+  id: number;
+  name: string;
+  description?: string | null;
+  year?: number | null;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -145,25 +565,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -187,12 +588,44 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'programs';
+        value: number | Program;
+      } | null)
+    | ({
+        relationTo: 'program-categories';
+        value: number | ProgramCategory;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'event-categories';
+        value: number | EventCategory;
+      } | null)
+    | ({
+        relationTo: 'gallery-images';
+        value: number | GalleryImage;
+      } | null)
+    | ({
+        relationTo: 'gallery-categories';
+        value: number | GalleryCategory;
+      } | null)
+    | ({
+        relationTo: 'impact-statistics';
+        value: number | ImpactStatistic;
+      } | null)
+    | ({
+        relationTo: 'legal-documents';
+        value: number | LegalDocument;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -238,6 +671,247 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programs_select".
+ */
+export interface ProgramsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  category?: T;
+  programStatus?: T;
+  featured?: T;
+  shortDescription?: T;
+  featuredImage?: T;
+  targetBeneficiaries?: T;
+  objectives?: T;
+  activities?: T;
+  location?: T;
+  schedule?: T;
+  gallery?: T;
+  showDonationCta?: T;
+  registrationLink?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        ogImage?: T;
+        noIndex?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "program-categories_select".
+ */
+export interface ProgramCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  eventDate?: T;
+  eventTime?: T;
+  category?: T;
+  shortDescription?: T;
+  featuredImage?: T;
+  location?: T;
+  googleMapsUrl?: T;
+  description?: T;
+  registrationLink?: T;
+  videoLink?: T;
+  gallery?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        ogImage?: T;
+        noIndex?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-categories_select".
+ */
+export interface EventCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-images_select".
+ */
+export interface GalleryImagesSelect<T extends boolean = true> {
+  title?: T;
+  caption?: T;
+  alt?: T;
+  category?: T;
+  program?: T;
+  event?: T;
+  featured?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        large?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-categories_select".
+ */
+export interface GalleryCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "impact-statistics_select".
+ */
+export interface ImpactStatisticsSelect<T extends boolean = true> {
+  label?: T;
+  value?: T;
+  description?: T;
+  icon?: T;
+  sortOrder?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-documents_select".
+ */
+export interface LegalDocumentsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  year?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        large?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -258,24 +932,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -316,6 +972,378 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Featured programs, impact statistics, latest events and gallery photos are picked automatically.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: number;
+  hero?: {
+    headline?: string | null;
+    subheadline?: string | null;
+    image?: (number | null) | Media;
+  };
+  /**
+   * Two or three sentences: who we are, our mission and our impact.
+   */
+  aboutSummary?: string | null;
+  donationCtaText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Legal documents are managed under Legal documents.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "foundation-profile".
+ */
+export interface FoundationProfile {
+  id: number;
+  profile?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  history?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  vision?: string | null;
+  mission?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  coreValues?:
+    | {
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  organizationStructure?: {
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    chart?: (number | null) | Media;
+  };
+  organizationPhotos?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional. When left empty the page title and short description are used automatically.
+   */
+  seo?: {
+    /**
+     * Title shown in Google results. Up to 70 characters.
+     */
+    metaTitle?: string | null;
+    /**
+     * Summary shown in Google results. Up to 160 characters.
+     */
+    metaDescription?: string | null;
+    /**
+     * Image shown when the page is shared on WhatsApp or social media.
+     */
+    ogImage?: (number | null) | Media;
+    noIndex?: boolean | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donation-info".
+ */
+export interface DonationInfo {
+  id: number;
+  /**
+   * The purpose of donating, its impact, and the programs people can support.
+   */
+  introduction?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  bankAccounts?:
+    | {
+        bankName: string;
+        accountNumber: string;
+        accountHolder: string;
+        qrImage?: (number | null) | Media;
+        additionalInfo?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  qris?: {
+    image?: (number | null) | Media;
+    additionalInfo?: string | null;
+  };
+  ewallets?:
+    | {
+        /**
+         * For example: GoPay, OVO, DANA.
+         */
+        provider: string;
+        accountNumber: string;
+        accountHolder?: string | null;
+        qrImage?: (number | null) | Media;
+        additionalInfo?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  whatsappConfirmation?: {
+    /**
+     * Where donors send their confirmation. Type it any way you like, for example 0812 3456 7890.
+     */
+    number?: string | null;
+    /**
+     * The message that opens in WhatsApp for the donor to send.
+     */
+    message?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-info".
+ */
+export interface ContactInfo {
+  id: number;
+  address?: string | null;
+  phone?: string | null;
+  /**
+   * Type it any way you like, for example 0812 3456 7890.
+   */
+  whatsapp?: string | null;
+  email?: string | null;
+  /**
+   * The normal Google Maps link, used for the "open in Maps" button.
+   */
+  mapsUrl?: string | null;
+  /**
+   * In Google Maps choose Share, then Embed a map, and paste only the address from src="...".
+   */
+  mapsEmbedUrl?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  siteName: string;
+  tagline?: string | null;
+  /**
+   * The logo shown in the header and footer.
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Used for pages that do not set their own.
+   */
+  defaultSeo?: {
+    metaDescription?: string | null;
+    ogImage?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        headline?: T;
+        subheadline?: T;
+        image?: T;
+      };
+  aboutSummary?: T;
+  donationCtaText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "foundation-profile_select".
+ */
+export interface FoundationProfileSelect<T extends boolean = true> {
+  profile?: T;
+  history?: T;
+  vision?: T;
+  mission?: T;
+  coreValues?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  organizationStructure?:
+    | T
+    | {
+        description?: T;
+        chart?: T;
+      };
+  organizationPhotos?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        ogImage?: T;
+        noIndex?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donation-info_select".
+ */
+export interface DonationInfoSelect<T extends boolean = true> {
+  introduction?: T;
+  bankAccounts?:
+    | T
+    | {
+        bankName?: T;
+        accountNumber?: T;
+        accountHolder?: T;
+        qrImage?: T;
+        additionalInfo?: T;
+        id?: T;
+      };
+  qris?:
+    | T
+    | {
+        image?: T;
+        additionalInfo?: T;
+      };
+  ewallets?:
+    | T
+    | {
+        provider?: T;
+        accountNumber?: T;
+        accountHolder?: T;
+        qrImage?: T;
+        additionalInfo?: T;
+        id?: T;
+      };
+  whatsappConfirmation?:
+    | T
+    | {
+        number?: T;
+        message?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-info_select".
+ */
+export interface ContactInfoSelect<T extends boolean = true> {
+  address?: T;
+  phone?: T;
+  whatsapp?: T;
+  email?: T;
+  mapsUrl?: T;
+  mapsEmbedUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  siteName?: T;
+  tagline?: T;
+  logo?: T;
+  defaultSeo?:
+    | T
+    | {
+        metaDescription?: T;
+        ogImage?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
