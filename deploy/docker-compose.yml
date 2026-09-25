@@ -1,0 +1,118 @@
+# Production stack: Caddy (HTTPS) -> app (Payload + Next.js) -> Postgres, plus an on-demand backup job.
+# Runs from /opt/daarul on the VPS. Use ./dc instead of "docker compose" so the right env files are loaded.
+
+name: daarul
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+x-backup-environment: &backup-environment
+  PGHOST: db
+  PGUSER: daarul
+  PGDATABASE: daarul
+  PGPASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+  RESTIC_REPOSITORY: ${RESTIC_REPOSITORY:-}
+  RESTIC_PASSWORD: ${RESTIC_PASSWORD:-}
+  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+  AWS_DEFAULT_REGION: auto
+  HEALTHCHECK_URL: ${HEALTHCHECK_URL:-}
+  BACKUP_KEEP_DAILY: ${BACKUP_KEEP_DAILY:-7}
+  BACKUP_KEEP_WEEKLY: ${BACKUP_KEEP_WEEKLY:-4}
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - '${HTTP_PORT:-80}:80'
+      - '${HTTPS_PORT:-443}:443'
+      - '${HTTPS_PORT:-443}:443/udp'
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL in .env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    mem_limit: 192m
+    logging: *logging
+
+  app:
+    image: ${APP_IMAGE:-daarul-app:unset}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://daarul:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/daarul
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env}
+      SITE_URL: ${SITE_URL:?set SITE_URL in .env}
+      CONTACT_TO_EMAIL: ${CONTACT_TO_EMAIL:-}
+      INITIAL_ADMIN_EMAIL: ${INITIAL_ADMIN_EMAIL:-}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD:-}
+    volumes:
+      - media:/data/media
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://127.0.0.1:3000/healthz']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+    mem_limit: 1536m
+    logging: *logging
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: daarul
+      POSTGRES_DB: daarul
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U daarul -d daarul']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    mem_limit: 768m
+    logging: *logging
+    # No published ports: the database is only reachable from the other containers.
+
+  # Nightly backup to object storage. Not started with the stack; run with:
+  #   ./dc --profile tools run --rm backup
+  backup:
+    profiles: ['tools']
+    build: ./backup
+    image: daarul-backup
+    environment: *backup-environment
+    volumes:
+      - media:/data/media:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    logging: *logging
+
+  # Restores a backup. Same image, but the media volume is writable. Use ./restore.sh, not this directly.
+  restore:
+    profiles: ['tools']
+    image: daarul-backup
+    environment: *backup-environment
+    volumes:
+      - media:/data/media
+    depends_on:
+      db:
+        condition: service_healthy
+    logging: *logging
+
+volumes:
+  pgdata:
+  media:
+  caddy_data:
+  caddy_config:

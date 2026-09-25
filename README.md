@@ -7,6 +7,7 @@ Website for Yayasan Daarul Ummahaat, built with Payload CMS embedded in Next.js,
 - Design language: [docs/design-language.md](docs/design-language.md)
 - Content model: [docs/content-model.md](docs/content-model.md)
 - Public site: [docs/frontend.md](docs/frontend.md)
+- Deployment, backups and operations: [docs/deployment.md](docs/deployment.md)
 
 ## Local development
 
@@ -29,4 +30,4 @@ corepack pnpm test:int      # needs the local Postgres running
 corepack pnpm build
 ```
 
-Deployment, backup and DNS setup are described in the architecture decision record and are not implemented yet.
+Pushing to `main` runs the checks and deploys to the VPS (see [docs/deployment.md](docs/deployment.md)). After changing collections or globals, create a migration with `corepack pnpm payload migrate:create <name>` and commit it.

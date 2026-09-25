@@ -1,0 +1,30 @@
+{
+	# Contact address for Let's Encrypt expiry notices.
+	email {$ACME_EMAIL}
+}
+
+www.{$DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Uploads are limited to 10 MB in the CMS; refuse anything much larger before it reaches the app.
+	request_body {
+		max_size 25MB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	# Caching is decided by the app (photos) and by Cloudflare cache rules (pages), not here,
+	# because a header set here would also stick to error responses.
+
+	reverse_proxy app:3000 {
+		# Caddy sets X-Forwarded-* itself. Cloudflare's own CF-Connecting-IP header passes through untouched.
+		lb_try_duration 5s
+	}
+}

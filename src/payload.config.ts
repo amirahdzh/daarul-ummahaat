@@ -18,9 +18,16 @@ import { DonationInfo } from './globals/DonationInfo'
 import { FoundationProfile } from './globals/FoundationProfile'
 import { HomePage } from './globals/HomePage'
 import { SiteSettings } from './globals/SiteSettings'
+import { bootstrapAdmin } from './lib/bootstrapAdmin'
+import { siteUrl } from './lib/site'
+import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const isProduction = process.env.NODE_ENV === 'production'
+// Browsers may only use the admin and API from the public address (plus localhost when developing).
+const allowedOrigins = [siteUrl(), ...(isProduction ? [] : ['http://localhost:3000', 'http://127.0.0.1:3000'])]
 
 export default buildConfig({
   admin: {
@@ -46,6 +53,10 @@ export default buildConfig({
   upload: { limits: { fileSize: 10 * 1024 * 1024 } },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
+  cors: allowedOrigins,
+  csrf: allowedOrigins,
+  // Creates the first administrator from INITIAL_ADMIN_* when there are no users yet (see docs/deployment.md).
+  onInit: bootstrapAdmin,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
@@ -53,6 +64,9 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // In production the schema only changes through migrations, which run automatically at startup.
+    // Create one after any change to collections or globals: pnpm payload migrate:create <name>
+    prodMigrations: migrations,
   }),
   sharp,
   plugins: [],

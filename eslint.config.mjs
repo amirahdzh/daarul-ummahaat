@@ -24,7 +24,8 @@ const eslintConfig = [
     },
   },
   {
-    ignores: ['.next/', 'src/payload-types.ts', 'src/payload-generated-schema.ts'],
+    // Generated files: never edited by hand.
+    ignores: ['.next/', 'src/payload-types.ts', 'src/payload-generated-schema.ts', 'src/migrations/'],
   },
 ]
 

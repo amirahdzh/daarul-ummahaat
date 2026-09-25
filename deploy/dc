@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Docker Compose with this deployment's settings loaded. Use it instead of "docker compose", for example:
+#   ./dc ps            ./dc logs -f app            ./dc exec db psql -U daarul daarul
+set -euo pipefail
+cd "$(dirname "$(readlink -f "$0")")"
+[ -f image.env ] || echo "APP_IMAGE=daarul-app:unset" > image.env
+exec docker compose --env-file .env --env-file image.env "$@"

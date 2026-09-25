@@ -57,13 +57,13 @@ Skip link, keyboard-operable menu (Escape closes it) and lightbox (arrow keys an
 ## Security
 
 - Security headers on every response: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`. The framework banner is removed.
-- A Content Security Policy is not set yet. It should be added with the deployment work, once the final embeds (Google Maps) and Cloudflare scripts are known. HTTPS and HSTS are handled by Caddy and Cloudflare.
+- A Content Security Policy is set on the public pages in production builds (`next.config.ts`): same-origin scripts, styles, images, fonts and connections, plus Google Maps frames. Inline scripts are allowed because Next.js needs them for page data. When Cloudflare Turnstile is added, its domain must be allowed there. The admin is excluded. HTTPS and HSTS are handled by Caddy (`deploy/Caddyfile`) and Cloudflare.
+- Uploaded photos are sent with a one-week cache header by the app itself (successful responses only). Page caching is decided by Cloudflare cache rules, see `docs/deployment.md`.
 - Links and embeds entered in the admin are validated (see `docs/content-model.md`).
 
 ## Not done yet
 
 - Email delivery through Hostinger SMTP, and Cloudflare Turnstile.
-- Content Security Policy.
 - Live preview of drafts from the admin.
 - Cloudflare cache rules for pages and uploaded images.
 - Browser and device testing (requirements section 36), and a Lighthouse run against production.

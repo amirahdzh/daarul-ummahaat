@@ -1,0 +1,11 @@
+[Unit]
+Description=Daarul Ummahaat nightly backup to Cloudflare R2
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=deploy
+WorkingDirectory=/opt/daarul
+ExecStart=/opt/daarul/dc --profile tools run --rm backup
+TimeoutStartSec=1h

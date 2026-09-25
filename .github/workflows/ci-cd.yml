@@ -1,0 +1,174 @@
+# Checks every change. A push to main also builds the image and deploys it to the VPS.
+# Setup (secrets, SSH key, first deploy): docs/deployment.md
+name: CI and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: # "Run workflow" button: redeploys main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Lint, types, tests, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: daarul_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/daarul_ci
+      PAYLOAD_SECRET: ci-only-secret-never-used-in-production
+      SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable pnpm (version comes from package.json)
+        run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm exec tsc --noEmit
+
+      - name: Generated files are committed
+        run: |
+          pnpm generate:importmap
+          pnpm generate:types
+          if [ -n "$(git status --porcelain -- 'src/app/(payload)/admin/importMap.js' src/payload-types.ts)" ]; then
+            echo "::error::Generated files are out of date. Run 'pnpm generate:importmap && pnpm generate:types' locally and commit the result."
+            git diff --stat
+            exit 1
+          fi
+
+      - name: Database migrations are up to date
+        env:
+          MIGRATIONS_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/daarul_migrations_ci
+        run: |
+          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -c "CREATE DATABASE daarul_migrations_ci"
+          DATABASE_URL="$MIGRATIONS_DATABASE_URL" NODE_ENV=production pnpm payload migrate
+          # If the collections changed without a new migration, this creates one and the check fails.
+          DATABASE_URL="$MIGRATIONS_DATABASE_URL" pnpm payload migrate:create ci-check --skip-empty
+          if [ -n "$(git status --porcelain src/migrations)" ]; then
+            echo "::error::The schema changed but there is no migration. Run 'pnpm payload migrate:create <name>' locally and commit the result."
+            git status --short src/migrations
+            exit 1
+          fi
+
+      - name: Tests
+        run: pnpm test:int
+
+      - name: Production build
+        run: pnpm build
+
+  deploy:
+    name: Build image and deploy
+    needs: checks
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    permissions:
+      contents: read
+      packages: write
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    env:
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+      SMOKE_TEST_URL: ${{ vars.SMOKE_TEST_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Image name
+        id: image
+        # Registry names must be lower case.
+        run: echo "name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          provenance: false
+          tags: |
+            ${{ steps.image.outputs.name }}:${{ github.sha }}
+            ${{ steps.image.outputs.name }}:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Prepare SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          HOST_KEY: ${{ secrets.VPS_HOST_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # The server's identity is pinned, so a man-in-the-middle cannot receive the deploy.
+          printf '%s\n' "$HOST_KEY" > ~/.ssh/known_hosts
+
+      - name: Upload deployment files
+        run: |
+          ssh_opts=(-i "$HOME/.ssh/deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$HOME/.ssh/known_hosts")
+          scp "${ssh_opts[@]}" -P "$VPS_PORT" -r deploy/. "$VPS_USER@$VPS_HOST:/opt/daarul/"
+          ssh "${ssh_opts[@]}" -p "$VPS_PORT" "$VPS_USER@$VPS_HOST" \
+            "chmod +x /opt/daarul/dc /opt/daarul/deploy.sh /opt/daarul/restore.sh /opt/daarul/backup/backup.sh"
+
+      - name: Deploy
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}:${{ github.sha }}
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY_USER: ${{ github.actor }}
+        run: |
+          ssh_opts=(-i "$HOME/.ssh/deploy_key" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$HOME/.ssh/known_hosts")
+          # The registry token goes over stdin, so it never appears in a process list or a log.
+          printf '%s' "$REGISTRY_TOKEN" | ssh "${ssh_opts[@]}" -p "$VPS_PORT" "$VPS_USER@$VPS_HOST" \
+            "GHCR_USER='$REGISTRY_USER' /opt/daarul/deploy.sh '$IMAGE'"
+
+      - name: Smoke test the public site
+        if: env.SMOKE_TEST_URL != ''
+        run: curl --fail --silent --show-error --retry 10 --retry-delay 6 --retry-all-errors "$SMOKE_TEST_URL/healthz"
+
+      - name: Remove SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

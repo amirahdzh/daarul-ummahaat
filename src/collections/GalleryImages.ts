@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { IMAGE_MIME_TYPES, imageSizes } from '../fields/upload'
+import { IMAGE_MIME_TYPES, imageSizes, photoCacheHeaders } from '../fields/upload'
 import { mediaDir } from '../lib/mediaDir'
 
 const humanise = (filename: string): string =>
@@ -100,5 +100,6 @@ export const GalleryImages: CollectionConfig = {
     imageSizes,
     adminThumbnail: 'thumbnail',
     focalPoint: true,
+    modifyResponseHeaders: photoCacheHeaders,
   },
 }

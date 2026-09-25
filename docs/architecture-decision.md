@@ -187,6 +187,6 @@ Progress: steps 1 and 2 are done (repository initialised, blank Payload and Next
 2. ~~Verify current versions and scaffold the Payload and Next.js project.~~
 3. ~~Model the content types from requirements §7 to §12 as Payload collections and globals.~~ Done, see `docs/content-model.md`.
 4. ~~Build the public pages (requirements §13 to §21).~~ Done, see `docs/frontend.md`.
-5. Write the Compose, Caddy and backup setup, and deploy to the VPS.
+5. ~~Write the Compose, Caddy and backup setup, and deploy to the VPS.~~ Files and runbook done, see `docs/deployment.md`. The first real deploy is up to the owner.
 6. Move DNS to Cloudflare and configure email.
 7. Test, including restore and cross-browser checks, then write the usage and technical documentation (requirements §36 to §38).

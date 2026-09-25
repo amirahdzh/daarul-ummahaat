@@ -1,0 +1,20 @@
+# Weekly pull requests for dependency updates (requirements section 26). Review and merge them;
+# a merge to main deploys automatically after the checks pass.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly
