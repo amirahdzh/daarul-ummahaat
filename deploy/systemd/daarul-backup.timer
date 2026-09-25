@@ -2,8 +2,8 @@
 Description=Run the Daarul Ummahaat backup every night
 
 [Timer]
-# Server time. Set the server to Asia/Jakarta so this means 03:15 WIB.
-OnCalendar=*-*-* 03:15:00
+# 03:15 Jakarta time, whatever timezone the server itself uses.
+OnCalendar=*-*-* 03:15:00 Asia/Jakarta
 RandomizedDelaySec=5min
 # Run at next boot if the server was off at the scheduled time.
 Persistent=true

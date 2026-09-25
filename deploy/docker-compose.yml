@@ -1,4 +1,6 @@
-# Production stack: Caddy (HTTPS) -> app (Payload + Next.js) -> Postgres, plus an on-demand backup job.
+# Production stack: app (Payload + Next.js) -> Postgres, plus an on-demand backup job.
+# HTTPS is handled by a Caddy that is already installed on the server (it forwards to 127.0.0.1:${APP_PORT}).
+# On a server with no web server, set COMPOSE_PROFILES=standalone in .env to run Caddy in a container too.
 # Runs from /opt/daarul on the VPS. Use ./dc instead of "docker compose" so the right env files are loaded.
 
 name: daarul
@@ -24,7 +26,9 @@ x-backup-environment: &backup-environment
   BACKUP_KEEP_WEEKLY: ${BACKUP_KEEP_WEEKLY:-4}
 
 services:
+  # Only used when there is no web server on the host (COMPOSE_PROFILES=standalone).
   caddy:
+    profiles: ['standalone']
     image: caddy:2-alpine
     restart: unless-stopped
     ports:
@@ -32,8 +36,8 @@ services:
       - '${HTTPS_PORT:-443}:443'
       - '${HTTPS_PORT:-443}:443/udp'
     environment:
-      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
-      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL in .env}
+      DOMAIN: ${DOMAIN:-localhost}
+      ACME_EMAIL: ${ACME_EMAIL:-admin@example.org}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
@@ -46,6 +50,9 @@ services:
   app:
     image: ${APP_IMAGE:-daarul-app:unset}
     restart: unless-stopped
+    # Reachable only from this machine. The host's Caddy forwards public traffic here.
+    ports:
+      - '127.0.0.1:${APP_PORT:-3100}:3000'
     environment:
       DATABASE_URL: postgres://daarul:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/daarul
       PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env}

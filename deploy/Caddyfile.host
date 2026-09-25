@@ -1,0 +1,26 @@
+# Site block for a Caddy that is installed on the server itself (systemd service).
+# Add it to /etc/caddy/Caddyfile (or a file it imports), replacing example.org with the real domain,
+# then check and apply it:
+#   sudo caddy validate --config /etc/caddy/Caddyfile
+#   sudo systemctl reload caddy
+# The port must match APP_PORT in /opt/daarul/.env (default 3100).
+
+www.example.org {
+	redir https://example.org{uri} permanent
+}
+
+example.org {
+	encode zstd gzip
+
+	# Uploads are limited to 10 MB in the CMS; refuse anything much larger before it reaches the app.
+	request_body {
+		max_size 25MB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	reverse_proxy 127.0.0.1:3100
+}

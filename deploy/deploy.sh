@@ -77,12 +77,15 @@ echo "APP_IMAGE=$IMAGE" > image.env
 log "Starting the stack with $IMAGE"
 $DC up -d --remove-orphans
 
-# Caddy keeps its configuration in memory, so a changed Caddyfile only takes effect after a reload.
-# The reload checks the file first and keeps the old configuration if the new one is invalid.
-log "Reloading the web server configuration"
-if ! $DC exec -T caddy caddy reload --config /etc/caddy/Caddyfile --force >/dev/null 2>&1; then
-  log "Caddy could not load the new Caddyfile. The old configuration is still running. Check: ./dc exec caddy caddy validate --config /etc/caddy/Caddyfile"
-  exit 1
+# If this stack runs its own Caddy (COMPOSE_PROFILES=standalone), it keeps its configuration in memory, so a
+# changed Caddyfile only takes effect after a reload. The reload checks the file first and keeps the old
+# configuration if the new one is invalid. With a Caddy installed on the host there is nothing to do here.
+if [ -n "$($DC ps -q --status running caddy 2>/dev/null || true)" ]; then
+  log "Reloading the web server configuration"
+  if ! $DC exec -T caddy caddy reload --config /etc/caddy/Caddyfile --force >/dev/null 2>&1; then
+    log "Caddy could not load the new Caddyfile. The old configuration is still running. Check: ./dc exec caddy caddy validate --config /etc/caddy/Caddyfile"
+    exit 1
+  fi
 fi
 
 log "Waiting for the app to become healthy (up to ${HEALTH_TIMEOUT}s)"
