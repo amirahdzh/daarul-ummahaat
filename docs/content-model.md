@@ -66,6 +66,8 @@ Every write requires sign-in. This is covered by tests in `tests/int/content-mod
 - the three program categories, six event categories and six gallery categories from the requirements (gallery categories in Indonesian: Program, Acara, Ramadhan, Wisuda, Yatim, Umum), and
 - the 11 initial programs as **drafts** with a placeholder description, so nothing half-written is public.
 
+The logic lives in `src/lib/starterContent.ts`, shared by the CLI script and by `src/lib/bootstrapStarterContent.ts`, which loads the same data into a live server when `SEED_STARTER_CONTENT=true` is set (see `docs/deployment.md`, "Loading the starter content").
+
 ## Working in the admin
 
 Each item in the sidebar is grouped: Programs, Events, Gallery, Site content, Files. The first time the admin is opened Payload asks for the first administrator's email and password.

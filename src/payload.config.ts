@@ -19,6 +19,7 @@ import { FoundationProfile } from './globals/FoundationProfile'
 import { HomePage } from './globals/HomePage'
 import { SiteSettings } from './globals/SiteSettings'
 import { bootstrapAdmin } from './lib/bootstrapAdmin'
+import { bootstrapStarterContent } from './lib/bootstrapStarterContent'
 import { siteUrl } from './lib/site'
 import { migrations } from './migrations'
 
@@ -27,7 +28,10 @@ const dirname = path.dirname(filename)
 
 const isProduction = process.env.NODE_ENV === 'production'
 // Browsers may only use the admin and API from the public address (plus localhost when developing).
-const allowedOrigins = [siteUrl(), ...(isProduction ? [] : ['http://localhost:3000', 'http://127.0.0.1:3000'])]
+const allowedOrigins = [
+  siteUrl(),
+  ...(isProduction ? [] : ['http://localhost:3000', 'http://127.0.0.1:3000']),
+]
 
 export default buildConfig({
   admin: {
@@ -55,8 +59,12 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   cors: allowedOrigins,
   csrf: allowedOrigins,
-  // Creates the first administrator from INITIAL_ADMIN_* when there are no users yet (see docs/deployment.md).
-  onInit: bootstrapAdmin,
+  // Runs once-off bootstrap steps gated behind environment variables (see docs/deployment.md):
+  // the first administrator (INITIAL_ADMIN_*) and the starter content (SEED_STARTER_CONTENT).
+  onInit: async (payload) => {
+    await bootstrapAdmin(payload)
+    await bootstrapStarterContent(payload)
+  },
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

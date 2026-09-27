@@ -435,6 +435,18 @@ git add src/migrations && git commit ...
 
 GitHub's checks fail if you forget this step. The migration runs by itself when the new version starts.
 
+**Loading the starter content (categories and the initial programs, as drafts):** the same data `pnpm seed` creates in development. Safe to run more than once; existing content is never touched. This is the recommended way to seed production, rather than copying the local database over, since the local one accumulates test artifacts and references local-only files.
+
+```bash
+cd /opt/daarul
+sed -i '/^SEED_STARTER_CONTENT/d' .env && echo 'SEED_STARTER_CONTENT=true' >> .env
+./dc up -d app
+./dc logs app --since 30s | grep -i "starter content"
+sed -i '/^SEED_STARTER_CONTENT/d' .env && ./dc up -d app     # turn it back off
+```
+
+Log in and check **Programs** in the admin: the 11 initial programs appear as drafts with a placeholder description, ready for an admin to fill in and publish.
+
 **Updates:** Dependabot opens weekly pull requests for dependencies. Merging one deploys it after the checks pass. Operating system updates install automatically (1.4); reboot occasionally (`sudo reboot`) when `/var/run/reboot-required` exists.
 
 **Rotate a secret:** change it in `.env`, then `./dc up -d`. Changing `PAYLOAD_SECRET` logs everyone out. Changing `POSTGRES_PASSWORD` needs `./dc exec db psql -U daarul -c "ALTER USER daarul PASSWORD '<new>'"` first.
