@@ -60,6 +60,7 @@ services:
       CONTACT_TO_EMAIL: ${CONTACT_TO_EMAIL:-}
       INITIAL_ADMIN_EMAIL: ${INITIAL_ADMIN_EMAIL:-}
       INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD:-}
+      SEED_STARTER_CONTENT: ${SEED_STARTER_CONTENT:-}
     volumes:
       - media:/data/media
     depends_on:
