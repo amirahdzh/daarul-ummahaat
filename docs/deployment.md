@@ -435,7 +435,7 @@ git add src/migrations && git commit ...
 
 GitHub's checks fail if you forget this step. The migration runs by itself when the new version starts.
 
-**Loading the starter content (categories and the initial programs, as drafts):** the same data `pnpm seed` creates in development. Safe to run more than once; existing content is never touched. This is the recommended way to seed production, rather than copying the local database over, since the local one accumulates test artifacts and references local-only files.
+**Loading the starter content** (categories, programs, events, gallery photos, impact statistics, a sample legal document, and the Home/About/Donation/Contact/Site settings globals, as described in `docs/content-model.md`, "Starting data"): the same data `pnpm seed` creates in development. Safe to run more than once; existing content and any admin's own edits are never touched. This is the recommended way to seed production, rather than copying the local database over, since the local one accumulates test artifacts and references local-only files.
 
 ```bash
 cd /opt/daarul
@@ -445,7 +445,7 @@ sed -i '/^SEED_STARTER_CONTENT/d' .env && echo 'SEED_STARTER_CONTENT=true' >> .e
 sed -i '/^SEED_STARTER_CONTENT/d' .env && ./dc up -d app     # turn it back off
 ```
 
-Log in and check **Programs** in the admin: the 11 initial programs appear as drafts with a placeholder description, ready for an admin to fill in and publish.
+Log in and check **Programs** in the admin: the initial programs appear as drafts, ready for an admin to fill in and publish. **Before the site is shown to real visitors, replace every value marked "(Contoh)"** — donation bank accounts, QRIS, e-wallets, and the contact address/email — with the foundation's real details; a fake-looking bank account a visitor could send money to would be a serious problem otherwise.
 
 **Updates:** Dependabot opens weekly pull requests for dependencies. Merging one deploys it after the checks pass. Operating system updates install automatically (1.4); reboot occasionally (`sudo reboot`) when `/var/run/reboot-required` exists.
 

@@ -1,8 +1,12 @@
-import type { Field } from 'payload'
+import type { Field, StaticLabel } from 'payload'
 
 import { normalizeWhatsAppNumber, validateWhatsAppNumber } from '../lib/whatsapp'
 
-type Options = { name: string; label?: string; admin?: { description?: string } }
+type Options = {
+  name: string
+  label?: StaticLabel
+  admin?: { description?: Record<string, string> | string }
+}
 
 /** A phone number stored in the form wa.me links need: international, digits only. */
 export const whatsappNumberField = ({ name, label, admin }: Options): Field => ({

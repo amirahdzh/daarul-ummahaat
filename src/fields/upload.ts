@@ -21,3 +21,10 @@ export const photoCacheHeaders = ({ headers }: { headers: Headers }): Headers =>
   headers.set('Cache-Control', 'public, max-age=604800')
   return headers
 }
+
+/** "santunan-yatim_2024.jpg" -> "santunan yatim 2024". A fallback source for alt text. */
+export const humaniseFilename = (filename: string): string =>
+  filename
+    .replace(/\.[^.]+$/, '')
+    .replace(/[-_]+/g, ' ')
+    .trim()

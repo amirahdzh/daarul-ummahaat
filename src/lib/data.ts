@@ -137,7 +137,14 @@ export const getFeaturedPrograms = async (limit = 6): Promise<Program[]> => {
   ).docs
 }
 
-export const getProgramBySlug = async (slug: string): Promise<Program | null> => {
+/**
+ * `draft: true` is only for the preview route (see lib/preview.ts): it bypasses the published-only
+ * access rule to show the latest draft. The public site must never pass it without that gate.
+ */
+export const getProgramBySlug = async (
+  slug: string,
+  { draft = false } = {},
+): Promise<Program | null> => {
   const result = await (
     await client()
   ).find({
@@ -145,7 +152,8 @@ export const getProgramBySlug = async (slug: string): Promise<Program | null> =>
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
-    overrideAccess: false,
+    draft,
+    overrideAccess: draft,
   })
   return result.docs[0] ?? null
 }
@@ -203,7 +211,11 @@ export const getLatestEvents = async (limit = 3): Promise<Event[]> =>
     })
   ).docs
 
-export const getEventBySlug = async (slug: string): Promise<Event | null> => {
+/** See the note on getProgramBySlug: `draft: true` is only for the gated preview route. */
+export const getEventBySlug = async (
+  slug: string,
+  { draft = false } = {},
+): Promise<Event | null> => {
   const result = await (
     await client()
   ).find({
@@ -211,7 +223,8 @@ export const getEventBySlug = async (slug: string): Promise<Event | null> => {
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
-    overrideAccess: false,
+    draft,
+    overrideAccess: draft,
   })
   return result.docs[0] ?? null
 }

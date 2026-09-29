@@ -10,7 +10,8 @@ const STATIC_PATHS = ['/', '/about', '/programs', '/events', '/gallery', '/donat
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { programs, events } = await getSitemapEntries()
-  const indexable = <T extends { seo?: { noIndex?: boolean | null } | null }>(doc: T) => !doc.seo?.noIndex
+  const indexable = <T extends { seo?: { noIndex?: boolean | null } | null }>(doc: T) =>
+    !doc.seo?.noIndex
   return [
     ...STATIC_PATHS.map((path) => ({ url: absoluteUrl(path) })),
     ...programs

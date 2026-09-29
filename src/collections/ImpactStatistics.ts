@@ -4,9 +4,12 @@ import { flagOrAdmin } from '../access'
 
 export const ImpactStatistics: CollectionConfig = {
   slug: 'impact-statistics',
-  labels: { singular: 'Impact statistic', plural: 'Impact statistics' },
+  labels: {
+    singular: { en: 'Impact statistic', id: 'Statistik dampak' },
+    plural: { en: 'Impact statistics', id: 'Statistik dampak' },
+  },
   admin: {
-    group: 'Site content',
+    group: { en: 'Site content', id: 'Konten situs' },
     useAsTitle: 'label',
     defaultColumns: ['label', 'value', 'sortOrder', 'active'],
   },
@@ -19,28 +22,43 @@ export const ImpactStatistics: CollectionConfig = {
       name: 'label',
       type: 'text',
       required: true,
-      admin: { description: 'For example: Yatim Dibina' },
+      label: { en: 'Label', id: 'Label' },
+      admin: { description: { en: 'For example: Yatim Dibina', id: 'Misalnya: Yatim Dibina' } },
     },
     {
       name: 'value',
       type: 'text',
       required: true,
-      admin: { description: 'Shown as typed, so "100+" and "1.000" both work.' },
+      label: { en: 'Value', id: 'Nilai' },
+      admin: {
+        description: {
+          en: 'Shown as typed, so "100+" and "1.000" both work.',
+          id: 'Ditampilkan persis seperti diketik, jadi "100+" dan "1.000" sama-sama bisa digunakan.',
+        },
+      },
     },
-    { name: 'description', type: 'text' },
-    { name: 'icon', type: 'upload', relationTo: 'media' },
+    { name: 'description', type: 'text', label: { en: 'Description', id: 'Deskripsi' } },
+    {
+      name: 'icon',
+      type: 'upload',
+      relationTo: 'media',
+      label: { en: 'Icon', id: 'Ikon' },
+    },
     {
       name: 'sortOrder',
       type: 'number',
       defaultValue: 0,
-      label: 'Display order',
-      admin: { position: 'sidebar', description: 'Lower numbers come first.' },
+      label: { en: 'Display order', id: 'Urutan tampilan' },
+      admin: {
+        position: 'sidebar',
+        description: { en: 'Lower numbers come first.', id: 'Angka lebih kecil ditampilkan lebih dulu.' },
+      },
     },
     {
       name: 'active',
       type: 'checkbox',
       defaultValue: true,
-      label: 'Show on the website',
+      label: { en: 'Show on the website', id: 'Tampilkan di situs' },
       admin: { position: 'sidebar' },
     },
   ],

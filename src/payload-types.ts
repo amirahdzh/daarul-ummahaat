@@ -270,9 +270,9 @@ export interface ProgramCategory {
 export interface Media {
   id: number;
   /**
-   * Describes the image for people who cannot see it, and for search engines.
+   * Describes the image for people who cannot see it, and for search engines. Filled in from the file name when left empty.
    */
-  alt: string;
+  alt?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;

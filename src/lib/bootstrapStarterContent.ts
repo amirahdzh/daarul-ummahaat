@@ -11,11 +11,17 @@ import { createStarterContent } from './starterContent'
  * accident is harmless, just an unnecessary check on every restart.
  */
 export const bootstrapStarterContent = async (
-  payload: Pick<Payload, 'find' | 'create' | 'logger'>,
+  payload: Pick<Payload, 'find' | 'create' | 'findGlobal' | 'updateGlobal' | 'logger'>,
 ): Promise<void> => {
   if (process.env.SEED_STARTER_CONTENT !== 'true') return
 
-  payload.logger.info('SEED_STARTER_CONTENT is set: loading starter categories and programs.')
-  await createStarterContent(payload)
-  payload.logger.info('Starter content loaded. Remove SEED_STARTER_CONTENT from .env now.')
+  payload.logger.info('SEED_STARTER_CONTENT is set: loading starter content.')
+  try {
+    await createStarterContent(payload)
+    payload.logger.info('Starter content loaded. Remove SEED_STARTER_CONTENT from .env now.')
+  } catch (error) {
+    // A bug or bad data here must never prevent the server itself from starting.
+    payload.logger.error('Failed to load starter content. The site will still start normally.')
+    payload.logger.error(error)
+  }
 }

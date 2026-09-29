@@ -3,15 +3,18 @@ import type { CollectionConfig } from 'payload'
 import { publishedOrAdmin } from '../access'
 import { seoField } from '../fields/seo'
 import { slugField } from '../fields/slug'
+import { previewUrl } from '../lib/preview'
 import { validateHttpUrl } from '../lib/validators'
 
 export const Events: CollectionConfig = {
   slug: 'events',
-  labels: { singular: 'Event', plural: 'Events' },
+  labels: { singular: { en: 'Event', id: 'Acara' }, plural: { en: 'Events', id: 'Acara' } },
   admin: {
-    group: 'Events',
+    group: { en: 'Events', id: 'Acara' },
     useAsTitle: 'name',
     defaultColumns: ['name', 'eventDate', 'category', '_status'],
+    listSearchableFields: ['name', 'location', 'shortDescription'],
+    preview: (doc) => (typeof doc?.slug === 'string' ? previewUrl(`/events/${doc.slug}`) : null),
   },
   access: {
     read: publishedOrAdmin,
@@ -22,13 +25,14 @@ export const Events: CollectionConfig = {
   },
   defaultSort: '-eventDate',
   fields: [
-    { name: 'name', type: 'text', required: true, label: 'Event name' },
+    { name: 'name', type: 'text', required: true, label: { en: 'Event name', id: 'Nama acara' } },
     slugField('name'),
     {
       name: 'eventDate',
       type: 'date',
       required: true,
       index: true,
+      label: { en: 'Event date', id: 'Tanggal acara' },
       admin: {
         position: 'sidebar',
         date: { pickerAppearance: 'dayOnly', displayFormat: 'd MMM yyyy' },
@@ -37,43 +41,71 @@ export const Events: CollectionConfig = {
     {
       name: 'eventTime',
       type: 'text',
+      label: { en: 'Event time', id: 'Waktu acara' },
       admin: {
         position: 'sidebar',
-        description: 'Optional, for example 08.00 - 12.00 WIB.',
+        description: {
+          en: 'Optional, for example 08.00 - 12.00 WIB.',
+          id: 'Opsional, misalnya 08.00 - 12.00 WIB.',
+        },
       },
     },
     {
       name: 'category',
       type: 'relationship',
       relationTo: 'event-categories',
+      label: { en: 'Category', id: 'Kategori' },
       admin: { position: 'sidebar' },
     },
     {
       name: 'shortDescription',
       type: 'textarea',
       maxLength: 200,
-      admin: { description: 'Shown on event cards. Up to 200 characters.' },
+      label: { en: 'Short description', id: 'Deskripsi singkat' },
+      admin: {
+        description: {
+          en: 'Shown on event cards. Up to 200 characters.',
+          id: 'Ditampilkan di kartu acara. Maksimal 200 karakter.',
+        },
+      },
     },
-    { name: 'featuredImage', type: 'upload', relationTo: 'media' },
-    { name: 'location', type: 'text' },
+    {
+      name: 'featuredImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: { en: 'Featured image', id: 'Gambar unggulan' },
+    },
+    { name: 'location', type: 'text', label: { en: 'Location', id: 'Lokasi' } },
     {
       name: 'googleMapsUrl',
       type: 'text',
-      label: 'Google Maps link',
+      label: { en: 'Google Maps link', id: 'Tautan Google Maps' },
       validate: validateHttpUrl,
     },
-    { name: 'description', type: 'richText' },
+    { name: 'description', type: 'richText', label: { en: 'Description', id: 'Deskripsi' } },
     {
       name: 'registrationLink',
       type: 'text',
+      label: { en: 'Registration link', id: 'Tautan pendaftaran' },
       validate: validateHttpUrl,
-      admin: { description: 'Optional. Leave empty if no registration is needed.' },
+      admin: {
+        description: {
+          en: 'Optional. Leave empty if no registration is needed.',
+          id: 'Opsional. Kosongkan jika tidak memerlukan pendaftaran.',
+        },
+      },
     },
     {
       name: 'videoLink',
       type: 'text',
+      label: { en: 'Video link', id: 'Tautan video' },
       validate: validateHttpUrl,
-      admin: { description: 'Optional. For example a YouTube link.' },
+      admin: {
+        description: {
+          en: 'Optional. For example a YouTube link.',
+          id: 'Opsional. Misalnya tautan YouTube.',
+        },
+      },
     },
     {
       name: 'gallery',
@@ -82,9 +114,12 @@ export const Events: CollectionConfig = {
       on: 'event',
       defaultLimit: 60,
       defaultSort: 'sortOrder',
+      label: { en: 'Gallery', id: 'Galeri' },
       admin: {
-        description:
-          'Photos linked to this event. To add one, open it in Gallery photos and choose this event.',
+        description: {
+          en: 'Photos linked to this event. To add one, open it in Gallery photos and choose this event.',
+          id: 'Foto yang tertaut ke acara ini. Untuk menambahkan, buka di Foto galeri dan pilih acara ini.',
+        },
       },
     },
     seoField,

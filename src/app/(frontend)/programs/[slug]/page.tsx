@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 import { GalleryGrid } from '@/components/GalleryGrid'
@@ -15,7 +16,8 @@ import type { GalleryImage, ProgramCategory } from '@/payload-types'
 type Params = Promise<{ slug: string }>
 
 export const generateMetadata = async ({ params }: { params: Params }) => {
-  const program = await getProgramBySlug((await params).slug)
+  const { isEnabled: draft } = await draftMode()
+  const program = await getProgramBySlug((await params).slug, { draft })
   if (!program) return {}
   return pageMetadata({
     title: program.name,
@@ -27,7 +29,8 @@ export const generateMetadata = async ({ params }: { params: Params }) => {
 }
 
 export default async function ProgramPage({ params }: { params: Params }) {
-  const program = await getProgramBySlug((await params).slug)
+  const { isEnabled: draft } = await draftMode()
+  const program = await getProgramBySlug((await params).slug, { draft })
   if (!program) notFound()
 
   const category = asDoc<ProgramCategory>(program.category)

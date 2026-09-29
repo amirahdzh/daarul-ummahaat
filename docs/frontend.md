@@ -61,9 +61,14 @@ Skip link, keyboard-operable menu (Escape closes it) and lightbox (arrow keys an
 - Uploaded photos are sent with a one-week cache header by the app itself (successful responses only). Page caching is decided by Cloudflare cache rules, see `docs/deployment.md`.
 - Links and embeds entered in the admin are validated (see `docs/content-model.md`).
 
+## Draft preview (content admin UX)
+
+Programs and Events have a "Preview" button in the admin (`admin.preview`, wired via `src/lib/preview.ts`). It opens `/preview?secret=...&path=...`, which checks the secret, turns on Next.js draft mode, and redirects to the real page. That page then fetches the *draft* document instead of the published one (`getProgramBySlug`/`getEventBySlug` in `src/lib/data.ts`, only when draft mode is on) and shows a dismissible banner ("Anda melihat draf...") site-wide via the root layout. "Exit preview" (`/exit-preview`) clears it. Nothing else changes: the public site still only ever shows published content, gated by the same `overrideAccess: false` rule as always.
+
+`PREVIEW_SECRET` is optional; it falls back to `PAYLOAD_SECRET` so no new required configuration exists.
+
 ## Not done yet
 
 - Email delivery through Hostinger SMTP, and Cloudflare Turnstile.
-- Live preview of drafts from the admin.
 - Cloudflare cache rules for pages and uploaded images.
 - Browser and device testing (requirements section 36), and a Lighthouse run against production.

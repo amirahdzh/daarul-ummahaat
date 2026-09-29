@@ -6,9 +6,12 @@ import { validateYear } from '../lib/validators'
 
 export const LegalDocuments: CollectionConfig = {
   slug: 'legal-documents',
-  labels: { singular: 'Legal document', plural: 'Legal documents' },
+  labels: {
+    singular: { en: 'Legal document', id: 'Dokumen legal' },
+    plural: { en: 'Legal documents', id: 'Dokumen legal' },
+  },
   admin: {
-    group: 'Site content',
+    group: { en: 'Site content', id: 'Konten situs' },
     useAsTitle: 'name',
     defaultColumns: ['name', 'year', 'published'],
   },
@@ -17,14 +20,27 @@ export const LegalDocuments: CollectionConfig = {
   },
   defaultSort: '-year',
   fields: [
-    { name: 'name', type: 'text', required: true, label: 'Document name' },
-    { name: 'description', type: 'textarea' },
-    { name: 'year', type: 'number', validate: validateYear, admin: { step: 1 } },
+    {
+      name: 'name',
+      type: 'text',
+      required: true,
+      label: { en: 'Document name', id: 'Nama dokumen' },
+    },
+    { name: 'description', type: 'textarea', label: { en: 'Description', id: 'Deskripsi' } },
+    {
+      name: 'year',
+      type: 'number',
+      label: { en: 'Year', id: 'Tahun' },
+      // A function default only applies when creating a new document, never overwriting a saved one.
+      defaultValue: () => new Date().getFullYear(),
+      validate: validateYear,
+      admin: { step: 1 },
+    },
     {
       name: 'published',
       type: 'checkbox',
       defaultValue: false,
-      label: 'Publish on the website',
+      label: { en: 'Publish on the website', id: 'Publikasikan di situs' },
       admin: { position: 'sidebar' },
     },
   ],

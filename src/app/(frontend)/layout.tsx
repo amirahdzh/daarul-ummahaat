@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from 'next'
 import { Fraunces, Plus_Jakarta_Sans } from 'next/font/google'
+import { draftMode } from 'next/headers'
 import type { ReactNode } from 'react'
 
+import { DraftBanner } from '@/components/DraftBanner'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { getContactInfo, getSiteSettings } from '@/lib/data'
@@ -43,10 +45,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FrontendLayout({ children }: { children: ReactNode }) {
-  const [settings, contact] = await Promise.all([getSiteSettings(), getContactInfo()])
+  const [settings, contact, draft] = await Promise.all([
+    getSiteSettings(),
+    getContactInfo(),
+    draftMode(),
+  ])
   return (
     <html lang="id" className={`${display.variable} ${body.variable}`}>
       <body>
+        {draft.isEnabled && <DraftBanner />}
         <a href="#isi" className="skip-link">
           Lewati ke isi halaman
         </a>

@@ -1390,6 +1390,29 @@ p {
   color: #7f2a1a;
 }
 
+/* ---------- Draft preview banner ---------- */
+
+.draft-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 16px;
+  padding: 10px var(--gutter);
+  background: var(--amber-tint);
+  color: var(--amber-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.draft-banner a {
+  color: var(--amber-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
 /* Honeypot: off-screen, not display:none, so simple bots still fill it. */
 .hp {
   position: absolute;

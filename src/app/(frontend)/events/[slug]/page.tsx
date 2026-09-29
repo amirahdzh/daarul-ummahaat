@@ -1,3 +1,4 @@
+import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 import { GalleryGrid } from '@/components/GalleryGrid'
@@ -17,7 +18,8 @@ import type { EventCategory, GalleryImage } from '@/payload-types'
 type Params = Promise<{ slug: string }>
 
 export const generateMetadata = async ({ params }: { params: Params }) => {
-  const event = await getEventBySlug((await params).slug)
+  const { isEnabled: draft } = await draftMode()
+  const event = await getEventBySlug((await params).slug, { draft })
   if (!event) return {}
   return pageMetadata({
     title: event.name,
@@ -29,7 +31,8 @@ export const generateMetadata = async ({ params }: { params: Params }) => {
 }
 
 export default async function EventPage({ params }: { params: Params }) {
-  const event = await getEventBySlug((await params).slug)
+  const { isEnabled: draft } = await draftMode()
+  const event = await getEventBySlug((await params).slug, { draft })
   if (!event) notFound()
 
   const category = asDoc<EventCategory>(event.category)

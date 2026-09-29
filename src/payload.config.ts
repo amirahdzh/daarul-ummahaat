@@ -1,5 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { en } from '@payloadcms/translations/languages/en'
+import { id } from '@payloadcms/translations/languages/id'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -20,6 +21,7 @@ import { HomePage } from './globals/HomePage'
 import { SiteSettings } from './globals/SiteSettings'
 import { bootstrapAdmin } from './lib/bootstrapAdmin'
 import { bootstrapStarterContent } from './lib/bootstrapStarterContent'
+import { richText } from './lib/richText'
 import { siteUrl } from './lib/site'
 import { migrations } from './migrations'
 
@@ -41,6 +43,12 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
+  // Admins are Indonesian speakers first; Indonesian is the default, English stays one click
+  // away per account (top-right language switcher), never a global toggle.
+  i18n: {
+    supportedLanguages: { en, id },
+    fallbackLanguage: 'id',
+  },
   collections: [
     Programs,
     ProgramCategories,
@@ -55,7 +63,7 @@ export default buildConfig({
   ],
   globals: [HomePage, FoundationProfile, DonationInfo, ContactInfo, SiteSettings],
   upload: { limits: { fileSize: 10 * 1024 * 1024 } },
-  editor: lexicalEditor(),
+  editor: richText,
   secret: process.env.PAYLOAD_SECRET || '',
   cors: allowedOrigins,
   csrf: allowedOrigins,
