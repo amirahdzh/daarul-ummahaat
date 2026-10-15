@@ -38,10 +38,15 @@ export const SiteSettings: GlobalConfig = {
       admin: {
         step: 1,
         description: {
-          en: 'Hijri dates on events are calculated automatically (Umm al-Qura) and can differ by a day or two from the Indonesian government announcement. Enter 1 to move all Hijri dates one day later, -1 one day earlier, 0 for no correction. Change it when the announcement for the current month differs.',
-          id: 'Tanggal Hijriah pada acara dihitung otomatis (Umm al-Qura) dan bisa berbeda satu atau dua hari dari pengumuman pemerintah Indonesia. Isi 1 untuk memajukan semua tanggal Hijriah satu hari, -1 untuk memundurkan satu hari, 0 tanpa koreksi. Ubah jika pengumuman bulan berjalan berbeda.',
+          en: 'Hijri dates are calculated automatically and can be a day or two off from the Indonesian government announcement. Leave at 0 unless they differ: enter 1 to move every Hijri date one day later, or -1 for one day earlier.',
+          id: 'Tanggal Hijriah dihitung otomatis dan bisa selisih satu atau dua hari dari pengumuman pemerintah Indonesia. Biarkan 0 kecuali berbeda: isi 1 untuk memajukan semua tanggal Hijriah satu hari, atau -1 untuk memundurkan satu hari.',
         },
       },
+    },
+    {
+      name: 'hijriPreview',
+      type: 'ui',
+      admin: { components: { Field: './components/admin/HijriPreview.tsx#HijriPreview' } },
     },
     advancedSection([
       {

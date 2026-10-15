@@ -1,5 +1,6 @@
 import type { CollectionConfig, StaticLabel } from 'payload'
 
+import { advancedSection } from '../fields/advanced'
 import { slugField } from '../fields/slug'
 
 const category = (
@@ -27,7 +28,7 @@ const category = (
       unique: true,
       label: { en: 'Name', id: 'Nama' },
     },
-    slugField('name'),
+    advancedSection([slugField('name')]),
     {
       name: 'sortOrder',
       type: 'number',
@@ -48,17 +49,17 @@ export const ProgramCategories = category(
   'program-categories',
   { en: 'Program category', id: 'Kategori program' },
   { en: 'Program categories', id: 'Kategori program' },
-  { en: 'Programs', id: 'Program' },
+  { en: 'Advanced', id: 'Lanjutan' },
 )
 export const EventCategories = category(
   'event-categories',
   { en: 'Event category', id: 'Kategori acara' },
   { en: 'Event categories', id: 'Kategori acara' },
-  { en: 'Events', id: 'Acara' },
+  { en: 'Advanced', id: 'Lanjutan' },
 )
 export const GalleryCategories = category(
   'gallery-categories',
   { en: 'Gallery category', id: 'Kategori galeri' },
   { en: 'Gallery categories', id: 'Kategori galeri' },
-  { en: 'Gallery', id: 'Galeri' },
+  { en: 'Advanced', id: 'Lanjutan' },
 )

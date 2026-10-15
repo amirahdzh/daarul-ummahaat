@@ -1,7 +1,8 @@
 import type { CollectionConfig } from 'payload'
 
 import { publishedOrAdmin } from '../access'
-import { seoField } from '../fields/seo'
+import { advancedSection } from '../fields/advanced'
+import { seoGroup } from '../fields/seo'
 import { slugField } from '../fields/slug'
 import { previewUrl } from '../lib/preview'
 import { validateHttpUrl } from '../lib/validators'
@@ -31,7 +32,6 @@ export const Programs: CollectionConfig = {
       required: true,
       label: { en: 'Program name', id: 'Nama program' },
     },
-    slugField('name'),
     {
       name: 'category',
       type: 'relationship',
@@ -122,9 +122,11 @@ export const Programs: CollectionConfig = {
       defaultSort: 'sortOrder',
       label: { en: 'Gallery', id: 'Galeri' },
       admin: {
+        // A new document has nothing to attach photos to yet; the box would only show "no results".
+        condition: (data) => Boolean(data?.id),
         description: {
-          en: 'Photos linked to this program. To add one, open it in Gallery photos and choose this program.',
-          id: 'Foto yang tertaut ke program ini. Untuk menambahkan, buka di Foto galeri dan pilih program ini.',
+          en: 'Photos linked to this program. Use the add button here to upload a photo: it is linked to this program automatically.',
+          id: 'Foto yang tertaut ke program ini. Tekan tombol tambah di sini untuk mengunggah foto: foto otomatis tertaut ke program ini.',
         },
       },
     },
@@ -149,6 +151,6 @@ export const Programs: CollectionConfig = {
         },
       },
     },
-    seoField,
+    advancedSection([slugField('name'), seoGroup]),
   ],
 }

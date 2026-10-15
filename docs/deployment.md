@@ -237,6 +237,11 @@ SITE_URL=https://$DOMAIN
 POSTGRES_PASSWORD=$(openssl rand -hex 24)
 PAYLOAD_SECRET=$(openssl rand -hex 32)
 CONTACT_TO_EMAIL=
+SMTP_HOST=
+SMTP_PORT=465
+SMTP_USER=
+SMTP_PASSWORD=
+EMAIL_FROM=
 INITIAL_ADMIN_EMAIL=$ADMIN_EMAIL
 INITIAL_ADMIN_PASSWORD=$ADMIN_PW
 RESTIC_REPOSITORY=
@@ -459,6 +464,6 @@ Log in and check **Programs** in the admin: the initial programs appear as draft
 
 - **One server.** If the VPS dies, the site is down until it is rebuilt. Recovery: new VPS, Parts 1 to 4, then `./restore.sh latest`. Email is separate (Hostinger) and keeps working.
 - **The deploy key can control the server** (it can run Docker). It lives only in GitHub secrets and can be revoked by deleting its line from `/home/deploy/.ssh/authorized_keys`.
-- **Contact form email** is not connected to a mail server yet. Until the email setup step, messages are written to `./dc logs app` and nobody receives them.
+- **Email needs the `SMTP_*` values in `.env`** (Hostinger mailbox: host, port 465 or 587, the full address as user, its password; see `deploy/env.production.example`). The code is ready and sends over SMTP when `SMTP_HOST` is set, but it has not been tried against Hostinger yet. Until it is filled in, contact messages are only written to `./dc logs app`, and **an admin who forgets their password cannot reset it**, because the reset link is sent by email. Test both after filling it in: send a message from the contact form, and use "Lupa kata sandi" on the login page.
 - **Not verified here:** GitHub Actions, GHCR pulls, Let's Encrypt, R2. Their first runs are Parts 4.3, 4.4 and 5.2.
 - **No Lighthouse or load test yet.** Run PageSpeed on the live site after Part 6 (requirements section 25).

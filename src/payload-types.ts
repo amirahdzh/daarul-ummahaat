@@ -68,13 +68,13 @@ export interface Config {
   blocks: {};
   collections: {
     programs: Program;
-    'program-categories': ProgramCategory;
     events: Event;
-    'event-categories': EventCategory;
     'gallery-images': GalleryImage;
-    'gallery-categories': GalleryCategory;
     'impact-statistics': ImpactStatistic;
     'legal-documents': LegalDocument;
+    'program-categories': ProgramCategory;
+    'event-categories': EventCategory;
+    'gallery-categories': GalleryCategory;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -92,13 +92,13 @@ export interface Config {
   };
   collectionsSelect: {
     programs: ProgramsSelect<false> | ProgramsSelect<true>;
-    'program-categories': ProgramCategoriesSelect<false> | ProgramCategoriesSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
-    'event-categories': EventCategoriesSelect<false> | EventCategoriesSelect<true>;
     'gallery-images': GalleryImagesSelect<false> | GalleryImagesSelect<true>;
-    'gallery-categories': GalleryCategoriesSelect<false> | GalleryCategoriesSelect<true>;
     'impact-statistics': ImpactStatisticsSelect<false> | ImpactStatisticsSelect<true>;
     'legal-documents': LegalDocumentsSelect<false> | LegalDocumentsSelect<true>;
+    'program-categories': ProgramCategoriesSelect<false> | ProgramCategoriesSelect<true>;
+    'event-categories': EventCategoriesSelect<false> | EventCategoriesSelect<true>;
+    'gallery-categories': GalleryCategoriesSelect<false> | GalleryCategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -159,10 +159,6 @@ export interface UserAuthOperations {
 export interface Program {
   id: number;
   name: string;
-  /**
-   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
-   */
-  slug: string;
   category: number | ProgramCategory;
   programStatus: 'active' | 'seasonal' | 'completed';
   /**
@@ -211,7 +207,7 @@ export interface Program {
   location?: string | null;
   schedule?: string | null;
   /**
-   * Photos linked to this program. To add one, open it in Gallery photos and choose this program.
+   * Photos linked to this program. Use the add button here to upload a photo: it is linked to this program automatically.
    */
   gallery?: {
     docs?: (number | GalleryImage)[];
@@ -223,6 +219,10 @@ export interface Program {
    * Optional. A web address, for example a Google Form. Leave empty for none.
    */
   registrationLink?: string | null;
+  /**
+   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
+   */
+  slug: string;
   /**
    * Optional. When left empty the page title and short description are used automatically.
    */
@@ -403,10 +403,6 @@ export interface GalleryCategory {
 export interface Event {
   id: number;
   name: string;
-  /**
-   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
-   */
-  slug: string;
   eventDate: string;
   /**
    * Optional, for example 08.00 - 12.00 WIB.
@@ -444,13 +440,17 @@ export interface Event {
    */
   videoLink?: string | null;
   /**
-   * Photos linked to this event. To add one, open it in Gallery photos and choose this event.
+   * Photos linked to this event. Use the add button here to upload a photo: it is linked to this event automatically.
    */
   gallery?: {
     docs?: (number | GalleryImage)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  /**
+   * Part of the page address. Filled in automatically from the name. Changing it after publishing breaks existing links.
+   */
+  slug: string;
   /**
    * Optional. When left empty the page title and short description are used automatically.
    */
@@ -592,24 +592,12 @@ export interface PayloadLockedDocument {
         value: number | Program;
       } | null)
     | ({
-        relationTo: 'program-categories';
-        value: number | ProgramCategory;
-      } | null)
-    | ({
         relationTo: 'events';
         value: number | Event;
       } | null)
     | ({
-        relationTo: 'event-categories';
-        value: number | EventCategory;
-      } | null)
-    | ({
         relationTo: 'gallery-images';
         value: number | GalleryImage;
-      } | null)
-    | ({
-        relationTo: 'gallery-categories';
-        value: number | GalleryCategory;
       } | null)
     | ({
         relationTo: 'impact-statistics';
@@ -618,6 +606,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'legal-documents';
         value: number | LegalDocument;
+      } | null)
+    | ({
+        relationTo: 'program-categories';
+        value: number | ProgramCategory;
+      } | null)
+    | ({
+        relationTo: 'event-categories';
+        value: number | EventCategory;
+      } | null)
+    | ({
+        relationTo: 'gallery-categories';
+        value: number | GalleryCategory;
       } | null)
     | ({
         relationTo: 'media';
@@ -675,7 +675,6 @@ export interface PayloadMigration {
  */
 export interface ProgramsSelect<T extends boolean = true> {
   name?: T;
-  slug?: T;
   category?: T;
   programStatus?: T;
   featured?: T;
@@ -689,6 +688,7 @@ export interface ProgramsSelect<T extends boolean = true> {
   gallery?: T;
   showDonationCta?: T;
   registrationLink?: T;
+  slug?: T;
   seo?:
     | T
     | {
@@ -703,22 +703,10 @@ export interface ProgramsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "program-categories_select".
- */
-export interface ProgramCategoriesSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "events_select".
  */
 export interface EventsSelect<T extends boolean = true> {
   name?: T;
-  slug?: T;
   eventDate?: T;
   eventTime?: T;
   category?: T;
@@ -730,6 +718,7 @@ export interface EventsSelect<T extends boolean = true> {
   registrationLink?: T;
   videoLink?: T;
   gallery?: T;
+  slug?: T;
   seo?:
     | T
     | {
@@ -741,17 +730,6 @@ export interface EventsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "event-categories_select".
- */
-export interface EventCategoriesSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -814,17 +792,6 @@ export interface GalleryImagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "gallery-categories_select".
- */
-export interface GalleryCategoriesSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "impact-statistics_select".
  */
 export interface ImpactStatisticsSelect<T extends boolean = true> {
@@ -857,6 +824,39 @@ export interface LegalDocumentsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "program-categories_select".
+ */
+export interface ProgramCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-categories_select".
+ */
+export interface EventCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-categories_select".
+ */
+export interface GalleryCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1202,7 +1202,7 @@ export interface SiteSetting {
    */
   logo?: (number | null) | Media;
   /**
-   * Hijri dates on events are calculated automatically (Umm al-Qura) and can differ by a day or two from the Indonesian government announcement. Enter 1 to move all Hijri dates one day later, -1 one day earlier, 0 for no correction. Change it when the announcement for the current month differs.
+   * Hijri dates are calculated automatically and can be a day or two off from the Indonesian government announcement. Leave at 0 unless they differ: enter 1 to move every Hijri date one day later, or -1 for one day earlier.
    */
   hijriDayAdjustment?: number | null;
   /**

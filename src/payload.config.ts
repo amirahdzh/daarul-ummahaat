@@ -19,8 +19,10 @@ import { DonationInfo } from './globals/DonationInfo'
 import { FoundationProfile } from './globals/FoundationProfile'
 import { HomePage } from './globals/HomePage'
 import { SiteSettings } from './globals/SiteSettings'
+import { adminTranslations } from './lib/adminTranslations'
 import { bootstrapAdmin } from './lib/bootstrapAdmin'
 import { bootstrapStarterContent } from './lib/bootstrapStarterContent'
+import { emailAdapter } from './lib/email'
 import { richText } from './lib/richText'
 import { siteUrl } from './lib/site'
 import { migrations } from './migrations'
@@ -39,6 +41,10 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     meta: { titleSuffix: ' | Daarul Ummahaat' },
+    components: {
+      // Big shortcut buttons for the common jobs, above Payload's list of collections.
+      beforeDashboard: ['./components/admin/QuickActions.tsx#QuickActions'],
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },
@@ -48,16 +54,20 @@ export default buildConfig({
   i18n: {
     supportedLanguages: { en, id },
     fallbackLanguage: 'id',
+    // Plainer publish buttons and an Indonesian rich text editor (see the file for why).
+    translations: adminTranslations,
   },
+  // Order matters for the admin menu: groups appear in the order their first collection is listed,
+  // so everyday content comes first and the "Lanjutan" (advanced) group last.
   collections: [
     Programs,
-    ProgramCategories,
     Events,
-    EventCategories,
     GalleryImages,
-    GalleryCategories,
     ImpactStatistics,
     LegalDocuments,
+    ProgramCategories,
+    EventCategories,
+    GalleryCategories,
     Media,
     Users,
   ],
@@ -84,6 +94,8 @@ export default buildConfig({
     // Create one after any change to collections or globals: pnpm payload migrate:create <name>
     prodMigrations: migrations,
   }),
+  // Real SMTP in production; unset locally, so emails are printed to the terminal instead.
+  email: emailAdapter(),
   sharp,
   plugins: [],
 })

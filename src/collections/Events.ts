@@ -1,7 +1,8 @@
 import type { CollectionConfig } from 'payload'
 
 import { publishedOrAdmin } from '../access'
-import { seoField } from '../fields/seo'
+import { advancedSection } from '../fields/advanced'
+import { seoGroup } from '../fields/seo'
 import { slugField } from '../fields/slug'
 import { previewUrl } from '../lib/preview'
 import { validateHttpUrl } from '../lib/validators'
@@ -26,7 +27,6 @@ export const Events: CollectionConfig = {
   defaultSort: '-eventDate',
   fields: [
     { name: 'name', type: 'text', required: true, label: { en: 'Event name', id: 'Nama acara' } },
-    slugField('name'),
     {
       name: 'eventDate',
       type: 'date',
@@ -116,12 +116,14 @@ export const Events: CollectionConfig = {
       defaultSort: 'sortOrder',
       label: { en: 'Gallery', id: 'Galeri' },
       admin: {
+        // A new document has nothing to attach photos to yet; the box would only show "no results".
+        condition: (data) => Boolean(data?.id),
         description: {
-          en: 'Photos linked to this event. To add one, open it in Gallery photos and choose this event.',
-          id: 'Foto yang tertaut ke acara ini. Untuk menambahkan, buka di Foto galeri dan pilih acara ini.',
+          en: 'Photos linked to this event. Use the add button here to upload a photo: it is linked to this event automatically.',
+          id: 'Foto yang tertaut ke acara ini. Tekan tombol tambah di sini untuk mengunggah foto: foto otomatis tertaut ke acara ini.',
         },
       },
     },
-    seoField,
+    advancedSection([slugField('name'), seoGroup]),
   ],
 }

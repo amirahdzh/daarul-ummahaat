@@ -11,7 +11,7 @@ export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: { en: 'Image', id: 'Gambar' }, plural: { en: 'Images', id: 'Gambar' } },
   admin: {
-    group: { en: 'Files', id: 'Berkas' },
+    group: { en: 'Advanced', id: 'Lanjutan' },
     useAsTitle: 'alt',
     defaultColumns: ['filename', 'alt', 'updatedAt'],
   },

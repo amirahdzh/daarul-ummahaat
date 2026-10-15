@@ -7,6 +7,7 @@ Website for Yayasan Daarul Ummahaat, built with Payload CMS embedded in Next.js,
 - Design language: [docs/design-language.md](docs/design-language.md)
 - Content model: [docs/content-model.md](docs/content-model.md)
 - Public site: [docs/frontend.md](docs/frontend.md)
+- Admin guide (Indonesian, for the administrator): [docs/admin-guide.md](docs/admin-guide.md)
 - Deployment, backups and operations: [docs/deployment.md](docs/deployment.md)
 
 ## Local development

@@ -1,0 +1,114 @@
+/*
+ * Admin tweaks for people who are not technical and mostly use a phone. Kept small on purpose:
+ * only Payload's own colour variables and a few long-standing class names, so it keeps working
+ * (and follows light/dark mode) when Payload is updated.
+ */
+
+/* ---------- Home screen shortcuts (components/admin/QuickActions.tsx) ---------- */
+
+.quick-actions {
+  margin-bottom: calc(var(--base) * 1.5);
+}
+
+.quick-actions__title {
+  margin: 0 0 var(--base);
+}
+
+.quick-actions__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .quick-actions__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .quick-actions__list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.quick-actions__button {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 0 20px;
+  border: 1px solid var(--theme-elevation-1000);
+  border-radius: var(--style-radius-m, 8px);
+  background: var(--theme-elevation-1000);
+  color: var(--theme-elevation-0);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.quick-actions__button:hover,
+.quick-actions__button:focus-visible {
+  opacity: 0.85;
+}
+
+.quick-actions__button--quiet {
+  border-color: var(--theme-elevation-250);
+  background: transparent;
+  color: var(--theme-text);
+}
+
+.quick-actions__tip {
+  margin-top: var(--base);
+  padding: var(--base);
+  border-radius: var(--style-radius-m, 8px);
+  background: var(--theme-elevation-50);
+  line-height: 1.5;
+}
+
+.quick-actions__tip p {
+  margin: 4px 0 0;
+}
+
+.quick-actions__more {
+  margin: calc(var(--base) * 1.5) 0 0;
+}
+
+/* ---------- Hijri date preview in Site settings ---------- */
+
+.hijri-preview {
+  margin-bottom: var(--base);
+  padding: calc(var(--base) * 0.75) var(--base);
+  border-radius: var(--style-radius-m, 8px);
+  background: var(--theme-elevation-50);
+}
+
+.hijri-preview p {
+  margin: 4px 0 0;
+  color: var(--theme-elevation-600);
+  font-size: 0.875rem;
+}
+
+/* ---------- Phones and small tablets ---------- */
+
+@media (max-width: 768px) {
+  /* iOS zooms the page when a field under 16px gets focus, and rarely zooms back out. */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  /* Comfortable thumb targets. */
+  .btn {
+    min-height: 44px;
+  }
+
+  .nav a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}
