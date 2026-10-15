@@ -1202,6 +1202,10 @@ export interface SiteSetting {
    */
   logo?: (number | null) | Media;
   /**
+   * Hijri dates on events are calculated automatically (Umm al-Qura) and can differ by a day or two from the Indonesian government announcement. Enter 1 to move all Hijri dates one day later, -1 one day earlier, 0 for no correction. Change it when the announcement for the current month differs.
+   */
+  hijriDayAdjustment?: number | null;
+  /**
    * Used for pages that do not set their own.
    */
   defaultSeo?: {
@@ -1335,6 +1339,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   siteName?: T;
   tagline?: T;
   logo?: T;
+  hijriDayAdjustment?: T;
   defaultSeo?:
     | T
     | {

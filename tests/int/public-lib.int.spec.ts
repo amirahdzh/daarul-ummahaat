@@ -8,6 +8,7 @@ import {
 } from '@/lib/contact'
 import {
   dateBadge,
+  formatHijriDate,
   formatLongDate,
   isoDay,
   isUpcoming,
@@ -125,6 +126,20 @@ describe('format helpers', () => {
     expect(formatLongDate('2026-03-14T00:00:00Z')).toBe('Sabtu, 14 Maret 2026')
     // 17:30 UTC is already the next morning in Jakarta.
     expect(isoDay('2026-03-14T17:30:00Z')).toBe('2026-03-15')
+  })
+
+  it('formats Hijri dates with Indonesian month names', () => {
+    expect(formatHijriDate('2026-03-14T00:00:00Z')).toBe('25 Ramadan 1447 H')
+    // Jakarta calendar day, like the Gregorian helpers: 17:30 UTC is already the 15th there.
+    expect(formatHijriDate('2026-03-14T17:30:00Z')).toBe('26 Ramadan 1447 H')
+  })
+
+  it('shifts the Hijri date by the admin correction, across month boundaries', () => {
+    const base = formatHijriDate('2026-03-14T00:00:00Z')
+    expect(formatHijriDate('2026-03-14T00:00:00Z', 0)).toBe(base)
+    expect(formatHijriDate('2026-03-14T00:00:00Z', 1)).toBe('26 Ramadan 1447 H')
+    expect(formatHijriDate('2026-03-14T00:00:00Z', -1)).toBe('24 Ramadan 1447 H')
+    expect(formatHijriDate('2026-03-14T00:00:00Z', 6)).toBe('1 Syawal 1447 H')
   })
 
   it('builds the date badge', () => {

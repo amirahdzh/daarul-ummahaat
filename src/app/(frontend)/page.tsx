@@ -211,7 +211,7 @@ export default async function HomePageRoute() {
             <ul className="grid grid--cards">
               {events.map((event) => (
                 <li key={event.id}>
-                  <EventCard event={event} />
+                  <EventCard event={event} hijriAdjustment={settings.hijriDayAdjustment ?? 0} />
                 </li>
               ))}
             </ul>

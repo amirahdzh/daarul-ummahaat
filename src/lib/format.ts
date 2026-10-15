@@ -22,6 +22,42 @@ export const dateBadge = (value: string | Date): { day: string; month: string } 
 export const isoDay = (value: string | Date): string =>
   new Intl.DateTimeFormat('en-CA', { timeZone: TIME_ZONE }).format(new Date(value))
 
+/** Indonesian spelling of the Hijri months, in calendar order. */
+const HIJRI_MONTHS = [
+  'Muharram',
+  'Safar',
+  'Rabiul Awal',
+  'Rabiul Akhir',
+  'Jumadil Awal',
+  'Jumadil Akhir',
+  'Rajab',
+  'Syaban',
+  'Ramadan',
+  'Syawal',
+  'Zulkaidah',
+  'Zulhijah',
+]
+
+const hijriParts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', {
+  timeZone: 'UTC',
+  day: 'numeric',
+  month: 'numeric',
+  year: 'numeric',
+})
+
+/**
+ * "25 Syaban 1447 H": the Hijri date of the Jakarta calendar day, calculated with Umm al-Qura.
+ * `adjustment` shifts it by whole days so admins can follow the Indonesian government's
+ * announcement when it differs (see `hijriDayAdjustment` in site settings).
+ */
+export const formatHijriDate = (value: string | Date, adjustment = 0): string => {
+  const noon = new Date(`${isoDay(value)}T12:00:00Z`)
+  noon.setUTCDate(noon.getUTCDate() + Math.round(adjustment))
+  const get = (type: string) =>
+    Number(hijriParts.formatToParts(noon).find((part) => part.type === type)?.value)
+  return `${get('day')} ${HIJRI_MONTHS[get('month') - 1]} ${get('year')} H`
+}
+
 /** True when the event day is today or later, in Jakarta time. */
 export const isUpcoming = (eventDate: string | Date, now: Date = new Date()): boolean =>
   isoDay(eventDate) >= isoDay(now)

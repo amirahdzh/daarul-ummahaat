@@ -2,7 +2,7 @@ import { EventCard } from '@/components/Cards'
 import { FilterChips } from '@/components/FilterChips'
 import { PageHead } from '@/components/PageHead'
 import { Pagination } from '@/components/Pagination'
-import { getEventCategories, listEvents } from '@/lib/data'
+import { getEventCategories, getSiteSettings, listEvents } from '@/lib/data'
 import { parsePage } from '@/lib/format'
 import { pageMetadata } from '@/lib/seo'
 
@@ -23,9 +23,10 @@ export default async function EventsPage({ searchParams }: { searchParams: Searc
   const category = typeof query.category === 'string' ? query.category : undefined
   const sort = query.sort === 'oldest' ? 'oldest' : undefined
   const page = parsePage(query.page)
-  const [categories, result] = await Promise.all([
+  const [categories, result, settings] = await Promise.all([
     getEventCategories(),
     listEvents({ categorySlug: category, oldestFirst: sort === 'oldest', page }),
+    getSiteSettings(),
   ])
 
   return (
@@ -66,7 +67,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Searc
             <ul className="grid grid--cards">
               {result.docs.map((event) => (
                 <li key={event.id}>
-                  <EventCard event={event} />
+                  <EventCard event={event} hijriAdjustment={settings.hijriDayAdjustment ?? 0} />
                 </li>
               ))}
             </ul>

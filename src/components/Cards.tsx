@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { dateBadge, formatShortDate } from '@/lib/format'
+import { dateBadge, formatHijriDate, formatShortDate } from '@/lib/format'
 import { PROGRAM_STATUS } from '@/lib/labels'
 import { asDoc } from '@/lib/media'
 import type { Event, EventCategory, Program, ProgramCategory } from '@/payload-types'
@@ -36,7 +36,13 @@ export function ProgramCard({ program }: { program: Program }) {
   )
 }
 
-export function EventCard({ event }: { event: Event }) {
+export function EventCard({
+  event,
+  hijriAdjustment = 0,
+}: {
+  event: Event
+  hijriAdjustment?: number
+}) {
   const category = asDoc<EventCategory>(event.category)
   const image = asDoc(event.featuredImage)
   const badge = dateBadge(event.eventDate)
@@ -61,6 +67,10 @@ export function EventCard({ event }: { event: Event }) {
             {formatShortDate(event.eventDate)}
             {event.eventTime ? ` · ${event.eventTime}` : ''}
           </span>
+        </p>
+        <p className="meta meta--sub">
+          <span className="visually-hidden">Tanggal Hijriah: </span>
+          {formatHijriDate(event.eventDate, hijriAdjustment)}
         </p>
         {event.location && (
           <p className="meta">

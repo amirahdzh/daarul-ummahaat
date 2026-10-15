@@ -28,6 +28,21 @@ export const SiteSettings: GlobalConfig = {
         },
       },
     },
+    {
+      name: 'hijriDayAdjustment',
+      type: 'number',
+      min: -2,
+      max: 2,
+      defaultValue: 0,
+      label: { en: 'Hijri date correction (days)', id: 'Koreksi tanggal Hijriah (hari)' },
+      admin: {
+        step: 1,
+        description: {
+          en: 'Hijri dates on events are calculated automatically (Umm al-Qura) and can differ by a day or two from the Indonesian government announcement. Enter 1 to move all Hijri dates one day later, -1 one day earlier, 0 for no correction. Change it when the announcement for the current month differs.',
+          id: 'Tanggal Hijriah pada acara dihitung otomatis (Umm al-Qura) dan bisa berbeda satu atau dua hari dari pengumuman pemerintah Indonesia. Isi 1 untuk memajukan semua tanggal Hijriah satu hari, -1 untuk memundurkan satu hari, 0 tanpa koreksi. Ubah jika pengumuman bulan berjalan berbeda.',
+        },
+      },
+    },
     advancedSection([
       {
         name: 'defaultSeo',

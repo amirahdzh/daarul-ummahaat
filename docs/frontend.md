@@ -11,7 +11,7 @@ How the public pages are built. Requirements: `docs/requirements.md` sections 4,
 | `/programs` | Programs archive | Category filter, pagination (12 per page) |
 | `/programs/[slug]` | Program detail | Overview, objectives, activities, facts, schedule, gallery, donate, register and contact buttons |
 | `/events` | Events archive | Category filter, newest or oldest first, pagination |
-| `/events/[slug]` | Event detail | Date, time, place, description, gallery, registration, Google Maps and video links. Adds structured data |
+| `/events/[slug]` | Event detail | Date (with Hijri date), time, place, description, gallery, registration, Google Maps and video links. Adds structured data |
 | `/gallery` | Gallery | Category filter, lightbox, pagination (24 per page) |
 | `/donate` | Donate | Bank accounts with copy button, QRIS, e-wallets, WhatsApp confirmation |
 | `/contact` | Contact | Contact details, Google Maps embed, message form |
@@ -39,6 +39,7 @@ Related helpers: `src/lib/media.ts` (responsive image sources), `src/lib/format.
 
 - Each page sets a title, description, canonical address, Open Graph and Twitter card. Programs, events and About use the SEO group from the admin when filled in, then fall back to sensible defaults, then to site settings and a default share image.
 - "Hide from search engines" in the admin sets `noindex` and removes the page from the sitemap.
+- Hijri dates: event cards and the event detail page show the Hijri date under the Gregorian one (`formatHijriDate` in `src/lib/format.ts`). It is calculated with Umm al-Qura through `Intl`, with Indonesian month names, from the Jakarta calendar day. Umm al-Qura can differ by a day or two from the Indonesian government announcement, so admins can shift every Hijri date with `hijriDayAdjustment` (-2 to 2) in Site settings. Structured data keeps the Gregorian ISO date.
 - Structured data: `NonProfitOrganization` on the home page and `Event` on event pages.
 - Semantic HTML: one `h1` per page, landmarks, breadcrumbs, descriptive link text.
 - `SITE_URL` must be set in production. It builds canonical links, the sitemap and share images.

@@ -19,7 +19,7 @@ How the content in `docs/requirements.md` (sections 6 to 12 and 22) is modelled 
 | Foundation profile (§11, §14) | Global `foundation-profile` | Profile, history, vision, mission, core values, structure, photos, SEO |
 | Donation information (§20) | Global `donation-info` | Introduction, bank accounts, QRIS, e-wallets, WhatsApp confirmation |
 | Contact information (§21) | Global `contact-info` | Address, phone, WhatsApp, email, Google Maps link and embed |
-| Site settings | Global `site-settings` | Foundation name, tagline, logo, default SEO |
+| Site settings | Global `site-settings` | Foundation name, tagline, logo, Hijri date correction, default SEO |
 | Admin users | Collection `users` | One role for now. Only administrators have accounts |
 
 ## Decisions

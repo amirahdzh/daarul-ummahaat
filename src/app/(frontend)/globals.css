@@ -778,6 +778,10 @@ p {
   line-height: 1.4;
 }
 
+.meta--sub {
+  padding-left: 26px; /* lines up with the text after the 18px icon and 8px gap */
+}
+
 .meta svg {
   flex-shrink: 0;
   width: 18px;

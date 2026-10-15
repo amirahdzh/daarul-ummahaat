@@ -7,8 +7,8 @@ import { JsonLd } from '@/components/JsonLd'
 import { PageHead } from '@/components/PageHead'
 import { Photo } from '@/components/Photo'
 import { RichText } from '@/components/RichText'
-import { getEventBySlug } from '@/lib/data'
-import { formatLongDate, isoDay, isUpcoming } from '@/lib/format'
+import { getEventBySlug, getSiteSettings } from '@/lib/data'
+import { formatHijriDate, formatLongDate, isoDay, isUpcoming } from '@/lib/format'
 import { toGalleryItems } from '@/lib/gallery'
 import { asDoc, imageSource } from '@/lib/media'
 import { pageMetadata } from '@/lib/seo'
@@ -35,6 +35,7 @@ export default async function EventPage({ params }: { params: Params }) {
   const event = await getEventBySlug((await params).slug, { draft })
   if (!event) notFound()
 
+  const settings = await getSiteSettings()
   const category = asDoc<EventCategory>(event.category)
   const image = asDoc(event.featuredImage)
   const upcoming = isUpcoming(event.eventDate)
@@ -105,7 +106,12 @@ export default async function EventPage({ params }: { params: Params }) {
                 </span>
                 <p className="meta">
                   <CalendarIcon />
-                  <span>{formatLongDate(event.eventDate)}</span>
+                  <span>
+                    {formatLongDate(event.eventDate)}
+                    <br />
+                    <span className="visually-hidden">Tanggal Hijriah: </span>
+                    {formatHijriDate(event.eventDate, settings.hijriDayAdjustment ?? 0)}
+                  </span>
                 </p>
                 {event.eventTime && (
                   <p className="meta">
