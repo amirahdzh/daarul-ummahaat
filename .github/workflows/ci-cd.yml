@@ -39,7 +39,7 @@ jobs:
       PAYLOAD_SECRET: ci-only-secret-never-used-in-production
       SITE_URL: http://localhost:3000
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Enable pnpm (version comes from package.json)
         run: corepack enable
@@ -106,7 +106,7 @@ jobs:
       VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
       SMOKE_TEST_URL: ${{ vars.SMOKE_TEST_URL }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Image name
         id: image
